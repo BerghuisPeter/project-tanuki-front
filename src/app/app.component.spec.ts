@@ -1,5 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { CoreModule } from "./core/core.module";
+import { HttpClientModule } from "@angular/common/http";
+import { AppRoutingModule } from "./app.routing";
 
 describe('AppComponent', () => {
   beforeEach(async () => {
@@ -7,6 +10,11 @@ describe('AppComponent', () => {
       declarations: [
         AppComponent
       ],
+      imports: [
+        HttpClientModule,
+        AppRoutingModule,
+        CoreModule
+      ]
     }).compileComponents();
   });
 
@@ -26,6 +34,6 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('project-tanuki app is running!');
+    expect(compiled.querySelector('span')?.textContent).toContain('Project-tanuki');
   });
 });

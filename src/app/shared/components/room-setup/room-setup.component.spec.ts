@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RoomSetupComponent } from './room-setup.component';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('RoomSetupComponent', () => {
   let component: RoomSetupComponent;
@@ -8,7 +9,7 @@ describe('RoomSetupComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RoomSetupComponent]
+      imports: [RoomSetupComponent, NoopAnimationsModule]
     })
       .compileComponents();
 
