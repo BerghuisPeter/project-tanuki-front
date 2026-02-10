@@ -4,7 +4,8 @@ import { BattleShipCellStatus } from "../../models/battleship.model";
 @Component({
   selector: 'app-battleship-board',
   templateUrl: './battleship-board.component.html',
-  styleUrls: ['./battleship-board.component.scss']
+  styleUrls: ['./battleship-board.component.scss'],
+  standalone: false
 })
 export class BattleshipBoardComponent {
 

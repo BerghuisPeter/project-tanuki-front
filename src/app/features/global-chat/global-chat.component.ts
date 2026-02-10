@@ -15,7 +15,8 @@ import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from "@angular/material/form-field";
         subscriptSizing: 'dynamic'
       }
     }
-  ]
+  ],
+  standalone: false
 })
 export class GlobalChatComponent implements OnInit, OnDestroy {
 

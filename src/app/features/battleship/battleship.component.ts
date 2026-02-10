@@ -8,7 +8,8 @@ import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'app-battleship',
   templateUrl: './battleship.component.html',
-  styleUrls: ['./battleship.component.scss']
+  styleUrls: ['./battleship.component.scss'],
+  standalone: false
 })
 export class BattleshipComponent implements OnInit, OnDestroy {
   myBoard: BattleShipCellStatus[][];

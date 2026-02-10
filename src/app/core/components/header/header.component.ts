@@ -5,7 +5,8 @@ import { DomSanitizer } from "@angular/platform-browser";
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss']
+  styleUrls: ['./header.component.scss'],
+  standalone: false
 })
 export class HeaderComponent {
   @Input() title: string;

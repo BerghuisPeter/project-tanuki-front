@@ -9,7 +9,6 @@ import { debounceTime, Subscription } from "rxjs";
 
 @Component({
   selector: 'app-room-setup',
-  standalone: true,
   imports: [
     MatButtonModule,
     MatCardModule,
