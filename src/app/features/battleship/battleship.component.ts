@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BattleShipCellStatus } from "./models/battleship.model";
-import * as uuid from 'uuid';
 import { BattleshipService } from "./services/battleship.service";
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { v4 as uuid } from 'uuid';
 
 @Component({
   selector: 'app-battleship',
@@ -36,7 +36,7 @@ export class BattleshipComponent implements OnInit, OnDestroy {
     this.hits = [];
     this.gameOver = false;
 
-    this.myRoomCode = uuid.v4();
+    this.myRoomCode = uuid();
   }
 
   ngOnInit() {

@@ -19,10 +19,8 @@
     "target": "ES2022",
     "module": "ES2022",
     "useDefineForClassFields": false,
-    "lib": [
-      "ES2022",
-      "dom"
-    ]
+    "skipLibCheck": true
+    // remove when removing ngx-socket-io in favor for socket-io-client wrapped by service.
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
