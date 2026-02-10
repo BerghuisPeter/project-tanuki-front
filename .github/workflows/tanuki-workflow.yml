@@ -8,13 +8,25 @@ on:
       - 'docker/**'
       - '.github/workflows/old/**'
       - 'sonar-project.properties'
+  workflow_dispatch:
+    inputs:
+      force_angular:
+        description: 'Force Angular deployment'
+        required: false
+        type: boolean
+        default: false
+      force_socket:
+        description: 'Force Socket Server deployment'
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   changes:
     runs-on: ubuntu-latest
     outputs:
-      angular: ${{ steps.filter.outputs.angular }}
-      socket: ${{ steps.filter.outputs.socket }}
+      angular: ${{ steps.filter.outputs.angular == 'true' || github.event.inputs.force_angular == 'true' }}
+      socket: ${{ steps.filter.outputs.socket == 'true' || github.event.inputs.force_socket == 'true' }}
     steps:
       - uses: actions/checkout@v6
       - uses: dorny/paths-filter@v3
@@ -36,7 +48,7 @@ jobs:
   dev:
     name: deploy to dev
     needs: changes
-    if: ${{ (github.ref == 'refs/heads/develop' || github.base_ref == 'develop') && (needs.changes.outputs.angular == 'true' || needs.changes.outputs.socket == 'true') }}
+    if: ${{ (github.ref == 'refs/heads/develop' || github.event_name == 'workflow_dispatch') && (needs.changes.outputs.angular == 'true' || needs.changes.outputs.socket == 'true') }}
     uses: ./.github/workflows/_deployment.yml
     secrets: inherit
     with:
@@ -45,8 +57,8 @@ jobs:
       run_socket: ${{ needs.changes.outputs.socket == 'true' }}
   prod:
     name: deploy to prod
-    needs: changes
-    if: ${{ (github.ref == 'refs/heads/master' || github.base_ref == 'master') && (needs.changes.outputs.angular == 'true' || needs.changes.outputs.socket == 'true') }}
+    needs: [ changes, dev ]
+    if: ${{ github.ref == 'refs/heads/master' && (needs.changes.outputs.angular == 'true' || needs.changes.outputs.socket == 'true') }}
     uses: ./.github/workflows/_deployment.yml
     secrets: inherit
     with:
