@@ -3,6 +3,11 @@ name: Tanuki-workflow
 on:
   push:
     branches: [ develop, master ]
+    paths-ignore:
+      - '**.md'
+      - 'docker/**'
+      - '.github/workflows/old/**'
+      - 'sonar-project.properties'
 
 jobs:
   dev:

@@ -17,7 +17,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [ 20.x ]
+        node-version: [ 22.x ]
 
     steps:
       - name: Set vars to env
@@ -26,16 +26,17 @@ jobs:
         run: |
           echo "$VARS_JSON" | jq -r 'keys[] as $k | "\($k)=\(.[$k])"' >> $GITHUB_ENV
 
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v6
 
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4.0.2
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
+          cache: 'npm'
 
       - name: Cache node modules
         id: cache-node-modules
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         env:
           cache-name: cache-node-modules
         with:
@@ -56,12 +57,15 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: Test
+        run: npm run test:headless
+
       - name: Build
         run: npm run build -- --configuration production
 
       - name: Archive build
         if: success()
-        uses: actions/upload-artifact@v4.3.1
+        uses: actions/upload-artifact@v6
         with:
           name: deploy_dist
           path: dist
@@ -73,13 +77,13 @@ jobs:
     steps:
 
       - name: Checkout code
-        uses: actions/checkout@v4.1.1
+        uses: actions/checkout@v6
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
       - name: Download build
-        uses: actions/download-artifact@v4.1.2
+        uses: actions/download-artifact@v7
         with:
           name: deploy_dist
           path: dist
@@ -95,22 +99,23 @@ jobs:
           password: ${{ secrets.GOOGLE_CREDENTIALS }}
 
       - name: Build and push image to registry
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           file: ./docker/angular/Dockerfile
-          #          platforms: linux/amd64,linux/arm64
           push: true
           provenance: false
           tags: ${{ secrets.GOOGLE_REGION }}-docker.pkg.dev/${{ secrets.GOOGLE_PROJECT_ID }}/${{ vars.ANGULAR_GAR_REPO }}/${{ secrets.ANGULAR_IMAGE_NAME }}:${{ inputs.environment }}-${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v2.1.0
+        uses: google-github-actions/auth@v3
         with:
           credentials_json: '${{ secrets.GOOGLE_CREDENTIALS }}'
 
       - id: 'deploy'
-        uses: google-github-actions/deploy-cloudrun@v2
+        uses: google-github-actions/deploy-cloudrun@v3
         with:
           service: ${{ secrets.ANGULAR_IMAGE_NAME }}-${{ inputs.environment }}
           image: ${{ secrets.GOOGLE_REGION }}-docker.pkg.dev/${{ secrets.GOOGLE_PROJECT_ID }}/${{ vars.ANGULAR_GAR_REPO }}/${{ secrets.ANGULAR_IMAGE_NAME }}:${{ inputs.environment }}-${{ github.sha }}
