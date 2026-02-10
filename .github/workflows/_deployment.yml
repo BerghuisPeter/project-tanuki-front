@@ -5,11 +5,18 @@ on:
         type: string
         required: true
         description: Name of the target environment.
+      run_angular:
+        type: boolean
+        default: true
+      run_socket:
+        type: boolean
+        default: true
 
 jobs:
 
   angular:
     name: Angular
+    if: ${{ inputs.run_angular }}
     uses: ./.github/workflows/_angular.yml
     secrets: inherit
     with:
@@ -17,6 +24,7 @@ jobs:
 
   socket-server:
     name: Socket server
+    if: ${{ inputs.run_socket }}
     uses: ./.github/workflows/_socket.yml
     secrets: inherit
     with:
