@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { APP_PATHS } from "../../shared/models/app-paths.model";
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-home',
@@ -8,4 +9,5 @@ import { APP_PATHS } from "../../shared/models/app-paths.model";
 })
 export class HomeComponent {
   APP_PATHS = APP_PATHS;
+  readonly enableBattleShipFeature = environment.enableBattleShipFeature == 'true';
 }
