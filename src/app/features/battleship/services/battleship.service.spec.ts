@@ -3,6 +3,8 @@ import { BattleshipService } from './battleship.service';
 import { Socket } from 'ngx-socket-io';
 import { Subject } from 'rxjs';
 
+import { provideZoneChangeDetection } from '@angular/core';
+
 class MockSocket {
   emit = jasmine.createSpy('emit');
   connect = jasmine.createSpy('connect');
@@ -32,7 +34,8 @@ describe('BattleshipService', () => {
     TestBed.configureTestingModule({
       providers: [
         BattleshipService,
-        { provide: Socket, useValue: socket }
+        { provide: Socket, useValue: socket },
+        provideZoneChangeDetection()
       ]
     });
 

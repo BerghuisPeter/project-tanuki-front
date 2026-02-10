@@ -11,6 +11,7 @@ import { LoadingComponent } from "../../shared/components/loading/loading.compon
 import { Subject } from "rxjs";
 import { BattleshipService } from "./services/battleship.service";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
+import { provideZoneChangeDetection } from '@angular/core';
 
 describe('BattleshipComponent', () => {
   let component: BattleshipComponent;
@@ -45,7 +46,8 @@ describe('BattleshipComponent', () => {
       ],
       providers: [
         { provide: BattleshipService, useClass: MockBattleshipService },
-        { provide: Socket, useClass: MockSocket }
+        { provide: Socket, useClass: MockSocket },
+        provideZoneChangeDetection()
       ],
     }).compileComponents();
 

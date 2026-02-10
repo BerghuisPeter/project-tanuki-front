@@ -9,6 +9,7 @@ import { MatListModule } from "@angular/material/list";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { CharToColorModule } from "../../shared/directives/char-to-color/char-to-color.module";
 import { LoadingComponent } from "../../shared/components/loading/loading.component";
+import { provideZoneChangeDetection } from '@angular/core';
 
 describe('GlobalChatComponent', () => {
   let component: GlobalChatComponent;
@@ -54,7 +55,8 @@ describe('GlobalChatComponent', () => {
       ],
       providers: [
         { provide: ChatService, useClass: MockChatService },
-        { provide: Socket, useClass: MockSocket }
+        { provide: Socket, useClass: MockSocket },
+        provideZoneChangeDetection()
       ]
     })
     .compileComponents();

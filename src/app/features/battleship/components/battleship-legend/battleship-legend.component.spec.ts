@@ -4,6 +4,8 @@ import { BattleshipLegendComponent } from './battleship-legend.component';
 import { MatCardModule } from "@angular/material/card";
 import { MatIconModule } from "@angular/material/icon";
 
+import { provideZoneChangeDetection } from '@angular/core';
+
 describe('BattleshipLegendComponent', () => {
   let component: BattleshipLegendComponent;
   let fixture: ComponentFixture<BattleshipLegendComponent>;
@@ -14,7 +16,8 @@ describe('BattleshipLegendComponent', () => {
       imports: [
         MatCardModule,
         MatIconModule
-      ]
+      ],
+      providers: [provideZoneChangeDetection()]
     })
       .compileComponents();
 

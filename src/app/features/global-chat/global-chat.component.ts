@@ -31,8 +31,8 @@ export class GlobalChatComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.chatService.joinChat('globalChat');
-    this.chatService.message.subscribe(message => this.addNewMessage(message));
-    this.chatService.systemNotification.subscribe(message => this.addNewMessage(message));
+    this.chatService.message.subscribe((message: Message | string) => this.addNewMessage(message));
+    this.chatService.systemNotification.subscribe((message: Message | string) => this.addNewMessage(message));
   }
 
   ngOnDestroy(): void {

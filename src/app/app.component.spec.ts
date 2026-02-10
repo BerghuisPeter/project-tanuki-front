@@ -1,8 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { CoreModule } from "./core/core.module";
-import { HttpClientModule } from "@angular/common/http";
+import { provideHttpClient } from "@angular/common/http";
 import { AppRoutingModule } from "./app.routing";
+
+import { provideZoneChangeDetection } from '@angular/core';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
@@ -10,10 +12,11 @@ describe('AppComponent', () => {
       declarations: [
         AppComponent
       ],
-      imports: [
-        HttpClientModule,
-        AppRoutingModule,
-        CoreModule
+      imports: [AppRoutingModule,
+        CoreModule],
+      providers: [
+        provideHttpClient(),
+        provideZoneChangeDetection()
       ]
     }).compileComponents();
   });

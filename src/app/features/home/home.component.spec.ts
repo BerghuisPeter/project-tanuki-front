@@ -7,6 +7,8 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from '@angular/material/icon';
 import { RouterTestingModule } from '@angular/router/testing';
 
+import { provideZoneChangeDetection } from '@angular/core';
+
 describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
@@ -20,7 +22,8 @@ describe('HomeComponent', () => {
         MatButtonModule,
         MatIconModule,
         RouterTestingModule
-      ]
+      ],
+      providers: [provideZoneChangeDetection()]
     })
       .compileComponents();
 
