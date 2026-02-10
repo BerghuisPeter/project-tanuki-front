@@ -1,23 +1,19 @@
-<ng-container *ngIf="!connection.connected; else chatTemplate">
+@if (!connection.connected) {
   <app-loading class="flex justify-center mt-20" title="Connecting to Chat..."></app-loading>
-</ng-container>
-
-<ng-template #chatTemplate>
-
+} @else {
   <h2 class="px-1 md:px-4 border-b-4 m-0">You: <span appCharToColor>{{ connection.id }}</span></h2>
-
   <div #chatMessagesContainer class="flex-1 min-h-[100px] flex flex-col gap-4 overflow-y-auto pt-1 px-1 md:px-4">
-    <div *ngFor="let message of messages" class="flex flex-col">
-      <ng-container *ngIf="!isString(message); else systemNotificationBlock">
-        <span appCharToColor>{{ message.user }}</span>
-        <span>{{ message.value }}</span>
-      </ng-container>
-      <ng-template #systemNotificationBlock>
+    @for (message of messages; track message) {
+      <div class="flex flex-col">
+        @if (!isString(message)) {
+          <span appCharToColor>{{ message.user }}</span>
+          <span>{{ message.value }}</span>
+        } @else {
         <span>SYSTEM: {{ message }}</span>
-      </ng-template>
-    </div>
+      }
+      </div>
+    }
   </div>
-
   <mat-form-field class="w-full">
     <input (keyup.enter)="onEnter()"
            [formControl]="inputFormControl"
@@ -25,5 +21,5 @@
            placeholder="Your objectively wrong message goes here..."
            type="text">
   </mat-form-field>
+}
 
-</ng-template>

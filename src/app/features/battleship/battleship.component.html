@@ -1,18 +1,14 @@
-<h1 *ngIf="connectionError$ | async; else content">Connection error...</h1>
-
-<ng-template #content>
-
-  <app-loading *ngIf="(connected$ | async) === false; else setupTemplate"></app-loading>
-
-  <ng-template #setupTemplate>
+@if (connectionError$ | async) {
+  <h1>Connection error...</h1>
+} @else {
+  @if ((connected$ | async) === false) {
+    <app-loading></app-loading>
+  } @else {
     <app-room-setup (roomCodeEntered)="connectToRoom($event)"
                     [roomCode]="myRoomCode"/>
-  </ng-template>
-
+  }
   <ng-template #battleshipGameBoard>
-
     <app-battleship-legend></app-battleship-legend>
-
     <div class="flex flex-col gap-3 md:flex-row">
       <mat-card class="flex-grow">
         <mat-card-header class="bg-blue-100 pb-3">
@@ -32,10 +28,11 @@
         </mat-card-content>
       </mat-card>
     </div>
-
-    <div *ngIf="gameOver">
-      <h2>Game Over!</h2>
-    </div>
+    @if (gameOver) {
+      <div>
+        <h2>Game Over!</h2>
+      </div>
+    }
   </ng-template>
+}
 
-</ng-template>
