@@ -48,7 +48,7 @@
     "angular-cli-ghpages": "^1.0.6",
     "autoprefixer": "^10.4.14",
     "cross-env": "^7.0.3",
-    "eslint": "^8.57.0",
+    "eslint": "9.26.0",
     "jasmine-core": "~4.5.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.1.0",
