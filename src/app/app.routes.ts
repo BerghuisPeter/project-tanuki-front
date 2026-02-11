@@ -1,8 +1,8 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 import { APP_PATHS } from "./shared/models/app-paths.model";
+import { PageNotFoundComponent } from "./core/components/page-not-found/page-not-found.component";
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
@@ -15,12 +15,9 @@ const routes: Routes = [
   {
     path: APP_PATHS.BOAT,
     loadChildren: () => import('./features/battleship/battleship.module').then(m => m.BattleshipModule)
+  },
+  {
+    path: '**',
+    component: PageNotFoundComponent
   }
 ];
-
-@NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
-})
-export class AppRoutingModule {
-}

@@ -1,18 +1,21 @@
 import { Component, Input } from '@angular/core';
-import { MatIconRegistry } from "@angular/material/icon";
+import { MatIconModule, MatIconRegistry } from "@angular/material/icon";
 import { DomSanitizer } from "@angular/platform-browser";
+import { MatToolbarModule } from "@angular/material/toolbar";
+import { MatButtonModule } from "@angular/material/button";
+import { TitleCasePipe } from "@angular/common";
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
-  standalone: false
+  standalone: true,
+  imports: [MatIconModule, MatToolbarModule, MatButtonModule, TitleCasePipe],
 })
 export class HeaderComponent {
-  @Input() title: string;
+  @Input() title: string = 'headerTitle';
 
-  constructor(private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer) {
-    this.title = 'headerTitle';
+  constructor(private readonly matIconRegistry: MatIconRegistry, private readonly domSanitizer: DomSanitizer) {
 
     this.matIconRegistry.addSvgIcon(
       `racoon`,

@@ -1,10 +1,11 @@
 <div class="flex flex-col h-full">
   <app-header [title]="title"></app-header>
-  @if (!loading) {
-    <router-outlet>
-    </router-outlet>
-  } @else {
-  <pre class="flex justify-center ">
+  <div [class.hidden]="loading">
+    <router-outlet></router-outlet>
+  </div>
+
+  @if (loading) {
+    <pre class="flex justify-center ">
       ⠀⠀⠀⠀⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
       ⠀⠀⠀⡌⡀⠉⠓⢤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣠⠄⡄⠀
       ⠀⠀⠀⣇⢧⣶⡠⣬⣿⣶⣤⣤⣠⣴⣦⣤⣄⣀⠀⣀⣠⠞⢛⣡⣴⣾⣾⠀
@@ -21,5 +22,5 @@
       ⠀⠀⠀⠀⠈⠋⠘⠻⠋⢿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠟⠛⠛⠁⠁⠀⠀⠀⠀
       ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠀⠀⠀⠀⠀⠀⠀⠀
     </pre>
-}
+  }
 </div>

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { AppComponent } from './app.component';
+import { App } from './app';
 import { CoreModule } from "./core/core.module";
 import { provideHttpClient } from "@angular/common/http";
 import { AppRoutingModule } from "./app.routing";
@@ -10,7 +10,7 @@ describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [
-        AppComponent
+        App
       ],
       imports: [AppRoutingModule,
         CoreModule],
@@ -22,19 +22,19 @@ describe('AppComponent', () => {
   });
 
   it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
+    const fixture = TestBed.createComponent(App);
     const app = fixture.componentInstance;
     expect(app).toBeTruthy();
   });
 
   it(`should have as title 'project-tanuki'`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
+    const fixture = TestBed.createComponent(App);
     const app = fixture.componentInstance;
     expect(app.title).toEqual('project-tanuki');
   });
 
   it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
+    const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.querySelector('span')?.textContent).toContain('Project-tanuki');
