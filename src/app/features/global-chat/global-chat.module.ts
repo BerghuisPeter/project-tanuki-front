@@ -5,8 +5,9 @@ import { RouterModule } from "@angular/router";
 import { ReactiveFormsModule } from "@angular/forms";
 import { MatInputModule } from "@angular/material/input";
 import { MatListModule } from "@angular/material/list";
-import { CharToColorModule } from "../../shared/directives/char-to-color/char-to-color.module";
 import { LoadingComponent } from "../../shared/components/loading/loading.component";
+import { MatIconModule } from "@angular/material/icon";
+import { CharToColorDirective } from "../../shared/directives/char-to-color/char-to-color.directive";
 
 const routes = [
   {
@@ -23,8 +24,9 @@ const routes = [
     ReactiveFormsModule,
     MatInputModule,
     MatListModule,
-    CharToColorModule,
+    CharToColorDirective,
     LoadingComponent,
+    MatIconModule,
   ]
 })
 export class GlobalChatModule {

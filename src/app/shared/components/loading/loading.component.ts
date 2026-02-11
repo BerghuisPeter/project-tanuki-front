@@ -1,11 +1,15 @@
 import { Component, Input } from '@angular/core';
+import { NgOptimizedImage } from "@angular/common";
 
 
 @Component({
   selector: 'app-loading',
   templateUrl: './loading.component.html',
   styleUrls: ['./loading.component.scss'],
-  imports: []
+  standalone: true,
+  imports: [
+    NgOptimizedImage
+  ]
 })
 export class LoadingComponent {
   @Input() title: string = 'Loading...';

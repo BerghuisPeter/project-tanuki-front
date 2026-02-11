@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { SocketIoConfig, SocketIoModule } from "ngx-socket-io";
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from "./app.routing";
 import { provideHttpClient } from "@angular/common/http";
 import { CoreModule } from "./core/core.module";
@@ -28,8 +27,8 @@ const config: SocketIoConfig = {
   imports: [BrowserModule,
     AppRoutingModule,
     CoreModule,
-    SocketIoModule.forRoot(config),
-    BrowserAnimationsModule], providers: [
+    SocketIoModule.forRoot(config)],
+  providers: [
     provideHttpClient()
   ]
 })
