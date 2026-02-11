@@ -10,7 +10,7 @@ const routes: Routes = [
   },
   {
     path: APP_PATHS.CHAT,
-    loadChildren: () => import('./features/global-chat/global-chat.module').then(m => m.GlobalChatModule)
+    loadComponent: () => import('./features/global-chat/global-chat.component').then(m => m.GlobalChatComponent)
   },
   {
     path: APP_PATHS.BOAT,

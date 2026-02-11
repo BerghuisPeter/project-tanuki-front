@@ -10,7 +10,7 @@ export class ChatService {
   message = this.socket.fromEvent<Message, 'chat:receiveMessage'>('chat:receiveMessage');
   systemNotification = this.socket.fromEvent<string, 'chat:systemNotification'>('chat:systemNotification');
 
-  constructor(private socket: Socket) {
+  constructor(private readonly socket: Socket) {
   }
 
   connect() {

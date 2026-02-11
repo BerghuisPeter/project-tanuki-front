@@ -1,8 +1,14 @@
 import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Message } from "../../shared/models/message.model";
-import { FormControl, Validators } from "@angular/forms";
+import { FormControl, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ChatService } from "../../shared/services/chat.service";
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from "@angular/material/form-field";
+import { CommonModule } from "@angular/common";
+import { MatInputModule } from "@angular/material/input";
+import { MatListModule } from "@angular/material/list";
+import { MatIconModule } from "@angular/material/icon";
+import { CharToColorDirective } from "../../shared/directives/char-to-color/char-to-color.directive";
+import { LoadingComponent } from "../../shared/components/loading/loading.component";
 
 @Component({
   selector: 'app-global-chat',
@@ -16,7 +22,16 @@ import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from "@angular/material/form-field";
       }
     }
   ],
-  standalone: false
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatListModule,
+    MatIconModule,
+    CharToColorDirective,
+    LoadingComponent
+  ]
 })
 export class GlobalChatComponent implements OnInit, OnDestroy {
 
@@ -25,7 +40,7 @@ export class GlobalChatComponent implements OnInit, OnDestroy {
   inputFormControl: FormControl;
   @ViewChild('chatMessagesContainer') chatMessagesContainer!: ElementRef;
 
-  constructor(public chatService: ChatService, private changeDetectorRef: ChangeDetectorRef) {
+  constructor(public chatService: ChatService, private readonly changeDetectorRef: ChangeDetectorRef) {
     this.inputFormControl = new FormControl<string>('', Validators.required);
     this.connection = chatService.connect();
   }
