@@ -5,16 +5,14 @@
 
 html {
   height: 100%;
-  @include mat.all-component-themes(mat.define-theme((
+  @include mat.theme((
     color: (
       primary: mat.$azure-palette,
       tertiary: mat.$blue-palette,
     ),
-    typography: (
-      brand-family: Roboto,
-      plain-family: Roboto,
-    ),
-  )));
+    typography: Roboto,
+    density: 0,
+  ));
 }
 
 body {
@@ -26,4 +24,16 @@ body {
 
   margin: 0;
   height: 100%;
+}
+
+.icon-primary {
+  color: var(--mat-sys-primary);
+}
+
+.icon-tertiary {
+  color: var(--mat-sys-tertiary);
+}
+
+.icon-warn {
+  color: var(--mat-sys-error);
 }
