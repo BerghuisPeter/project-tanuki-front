@@ -3,7 +3,7 @@ const http = require('http').Server(app);
 const { Server } = require("socket.io");
 
 const EXPOSED_PORT = process.env.PORT || 8000;
-const CORS_DOMAIN = process.env.CORS_DOMAIN || "http://localhost:4200";
+const CORS_DOMAIN = process.env.CORS_DOMAIN ? process.env.CORS_DOMAIN.split(',').map(d => d.trim()) : "http://localhost:4200";
 
 const io = new Server(http, {
   cors: {
