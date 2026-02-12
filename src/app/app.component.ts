@@ -12,12 +12,12 @@ import { HeaderComponent } from "./core/components/header/header.component";
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.html',
-  styleUrls: ['./app.scss'],
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
   standalone: true,
   imports: [HeaderComponent, RouterOutlet]
 })
-export class App {
+export class AppComponent {
   title: string = 'project-tanuki';
   loading: boolean = false;
 
