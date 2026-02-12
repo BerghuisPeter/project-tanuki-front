@@ -1,6 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HeaderComponent } from './header.component';
+import { MatToolbarModule } from "@angular/material/toolbar";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
+import { provideHttpClient } from "@angular/common/http";
+import { provideZoneChangeDetection } from '@angular/core';
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -8,7 +13,14 @@ describe('HeaderComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [HeaderComponent]
+      imports: [HeaderComponent,
+        MatToolbarModule,
+        MatButtonModule,
+        MatIconModule],
+      providers: [
+        provideHttpClient(),
+        provideZoneChangeDetection()
+      ]
     })
       .compileComponents();
 

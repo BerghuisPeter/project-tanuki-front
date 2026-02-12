@@ -1,37 +1,48 @@
-# Compiled output
+# Build outputs
 /dist
 /tmp
 /out-tsc
 /bazel-out
-
-# Node
-/node_modules
-npm-debug.log
-yarn-error.log
-
-# IDEs and editors
-.idea/
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
-
-# Visual Studio Code
-.vscode/*
-.history/*
-
-# Miscellaneous
 /.angular
-.sass-cache/
-/connect.lock
+
+# Dependencies
+/node_modules
+/socket-server/node_modules/
+
+# Logs
+/logs
+*.log
+npm-debug.log*
+yarn-error.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Coverage and reports
 /coverage
+/eslint-report.json
+/.scannerwork/
+
+# Runtime/data caches
+/.sass-cache
+/connect.lock
 /libpeerconnection.log
-testem.log
+/testem.log
 /typings
 
-# System files
+# IDEs and editors
+/.idea
+/.vscode
+/.history
+/.project
+/.classpath
+/.c9
+/.settings
+*.launch
+*.sublime-workspace
+
+# OS files
 .DS_Store
 Thumbs.db
-/socket-server/node_modules/
+
+# Tooling/workspace
+/.nx

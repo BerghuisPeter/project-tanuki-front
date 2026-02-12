@@ -1,17 +1,18 @@
-import { AfterViewInit, Directive, ElementRef } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, Renderer2 } from '@angular/core';
 
 @Directive({
-  selector: '[appCharToColor]'
+  selector: '[appCharToColor]',
+  standalone: true,
 })
 export class CharToColorDirective implements AfterViewInit {
 
-  constructor(private el: ElementRef) {
+  constructor(private readonly el: ElementRef, private readonly renderer: Renderer2) {
   }
 
   ngAfterViewInit(): void {
     const characters = this.el.nativeElement.innerText;
     if (characters) {
-      this.el.nativeElement.style.color = this.stringToHexColor(characters);
+      this.renderer.setStyle(this.el.nativeElement, 'color', this.stringToHexColor(characters));
     }
   }
 
@@ -21,7 +22,10 @@ export class CharToColorDirective implements AfterViewInit {
     let b = 0;
 
     for (let i = 0; i < str.length; i++) {
-      const charCode = str.charCodeAt(i);
+      const charCode = str.codePointAt(i);
+      if (charCode === undefined) {
+        return '#000000';
+      }
       r += charCode;
       g += charCode * 2;
       b += charCode * 3;

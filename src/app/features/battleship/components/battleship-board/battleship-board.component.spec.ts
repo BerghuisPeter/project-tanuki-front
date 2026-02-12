@@ -2,13 +2,16 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { BattleshipBoardComponent } from './battleship-board.component';
 
+import { provideZoneChangeDetection } from '@angular/core';
+
 describe('BattleshipBoardComponent', () => {
   let component: BattleshipBoardComponent;
   let fixture: ComponentFixture<BattleshipBoardComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [BattleshipBoardComponent]
+      declarations: [BattleshipBoardComponent],
+      providers: [provideZoneChangeDetection()]
     })
       .compileComponents();
 

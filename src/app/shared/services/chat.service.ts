@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Socket } from "ngx-socket-io";
-import { Message } from "./models/message.model";
+import { Message } from "../models/message.model";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
 
-  message = this.socket.fromEvent<Message>('chat:receiveMessage');
-  systemNotification = this.socket.fromEvent<string>('chat:systemNotification');
+  message = this.socket.fromEvent<Message, 'chat:receiveMessage'>('chat:receiveMessage');
+  systemNotification = this.socket.fromEvent<string, 'chat:systemNotification'>('chat:systemNotification');
 
-  constructor(private socket: Socket) {
+  constructor(private readonly socket: Socket) {
   }
 
   connect() {

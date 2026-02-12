@@ -3,19 +3,65 @@ name: Tanuki-workflow
 on:
   push:
     branches: [ develop, master ]
+    paths-ignore:
+      - '**.md'
+      - 'docker/**'
+      - '.github/workflows/old/**'
+      - 'sonar-project.properties'
+  workflow_dispatch:
+    inputs:
+      force_angular:
+        description: 'Force Angular deployment'
+        required: false
+        type: boolean
+        default: false
+      force_socket:
+        description: 'Force Socket Server deployment'
+        required: false
+        type: boolean
+        default: false
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      angular: ${{ steps.filter.outputs.angular == 'true' || github.event.inputs.force_angular == 'true' }}
+      socket: ${{ steps.filter.outputs.socket == 'true' || github.event.inputs.force_socket == 'true' }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            angular:
+              - 'src/**'
+              - 'angular.json'
+              - 'package.json'
+              - 'package-lock.json'
+              - 'tsconfig.json'
+              - 'tailwind.config.js'
+              - '.github/workflows/_angular.yml'
+            socket:
+              - 'socket-server/**'
+              - '.github/workflows/_socket.yml'
+
   dev:
     name: deploy to dev
-    if: ${{ github.ref == 'refs/heads/develop' || github.base_ref == 'develop' }}
+    needs: changes
+    if: ${{ (github.ref == 'refs/heads/develop' || github.event_name == 'workflow_dispatch') && (needs.changes.outputs.angular == 'true' || needs.changes.outputs.socket == 'true') }}
     uses: ./.github/workflows/_deployment.yml
     secrets: inherit
     with:
       environment: dev
+      run_angular: ${{ needs.changes.outputs.angular == 'true' }}
+      run_socket: ${{ needs.changes.outputs.socket == 'true' }}
   prod:
     name: deploy to prod
-    if: ${{ github.ref == 'refs/heads/master' || github.base_ref == 'master' }}
+    needs: [ changes, dev ]
+    if: ${{ github.ref == 'refs/heads/master' && (needs.changes.outputs.angular == 'true' || needs.changes.outputs.socket == 'true') }}
     uses: ./.github/workflows/_deployment.yml
     secrets: inherit
     with:
       environment: prod
+      run_angular: ${{ needs.changes.outputs.angular == 'true' }}
+      run_socket: ${{ needs.changes.outputs.socket == 'true' }}

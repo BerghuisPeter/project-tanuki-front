@@ -1,14 +1,51 @@
-/* You can add global styles to this file, and also import other style files */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@use '@angular/material' as mat;
+@use 'tailwindcss';
 
-html, body {
+@include mat.core();
+
+html {
   height: 100%;
-  min-width: 230px;
+}
+
+body.light-theme {
+  @include mat.theme((
+    color: (
+      primary: mat.$azure-palette,
+      tertiary: mat.$blue-palette,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
+}
+
+body.dark-theme {
+  @include mat.theme((
+    color: (
+      primary: mat.$red-palette,
+      tertiary: mat.$violet-palette,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
 }
 
 body {
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  height: 100%;
+}
+
+.icon-primary {
+  color: var(--mat-sys-primary);
+}
+
+.icon-tertiary {
+  color: var(--mat-sys-tertiary);
+}
+
+.icon-warn {
+  color: var(--mat-sys-error);
 }

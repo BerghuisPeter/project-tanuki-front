@@ -1,12 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BattleShipCellStatus } from "./models/battleship.model";
+import { BattleshipService } from "./services/battleship.service";
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { v4 as uuid } from 'uuid';
 
 @Component({
   selector: 'app-battleship',
   templateUrl: './battleship.component.html',
-  styleUrls: ['./battleship.component.scss']
+  styleUrls: ['./battleship.component.scss'],
+  standalone: false
 })
-export class BattleshipComponent {
+export class BattleshipComponent implements OnInit, OnDestroy {
   myBoard: BattleShipCellStatus[][];
   OpponentBoard: BattleShipCellStatus[][];
   shipLocations: number[][];
@@ -17,12 +22,52 @@ export class BattleshipComponent {
   numShips = 4;
   shipLength = 3;
 
-  constructor() {
+  // connection: any;
+
+  myRoomCode: string;
+  connected$ = this.battleshipService.connected$;
+  connectionError$ = this.battleshipService.connectionError$;
+  private readonly destroy$ = new Subject<void>();
+
+  constructor(private readonly battleshipService: BattleshipService) {
     this.myBoard = this.createBoard(this.rows, this.cols);
     this.OpponentBoard = this.createBoard(this.rows, this.cols);
     this.shipLocations = this.placeShips(this.numShips, this.shipLength, this.myBoard);
     this.hits = [];
     this.gameOver = false;
+
+    this.myRoomCode = uuid();
+  }
+
+  ngOnInit() {
+
+    this.battleshipService.connect();
+    // this.connection = this.battleshipService.connect();
+    // console.log(this.connection);
+
+    this.connected$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((v) => {
+        console.log('component: Socket', v);
+        this.battleshipService.joinBattleshipRoom(this.myRoomCode);
+      });
+
+    // this.battleshipService.connectionError$
+    //   .pipe(takeUntil(this.destroy$))
+    //   .subscribe((val) => {
+    //     console.log('component: ERROR!', val);
+    //     // handle error;
+    //   });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  connectToRoom(roomCode: string) {
+    console.log(roomCode);
+    this.battleshipService.joinBattleshipRoom(roomCode);
   }
 
   fire(rowCol: number[]) {
@@ -89,13 +134,12 @@ export class BattleshipComponent {
 
   placeShips(numShips: number, shipLength: number, board: BattleShipCellStatus[][]): number[][] {
     const shipLocations = [];
+    let i = 0;
 
-    for (let i = 0; i < numShips; i++) {
+    while (i < numShips) {
       let row = Math.floor(Math.random() * board.length);
       let col = Math.floor(Math.random() * board[0].length);
-
       const direction = Math.floor(Math.random() * 2);
-
       const shipLocation = [];
 
       for (let j = 0; j < shipLength; j++) {
@@ -108,14 +152,17 @@ export class BattleshipComponent {
       }
 
       if (this.checkCollision(shipLocation, board)) {
-        i--;
-      } else {
-        for (const location of shipLocation) {
-          board[location[0]][location[1]] = BattleShipCellStatus.BOAT;
-        }
-        shipLocations.push(...shipLocation);
+        // Retry placement if collision detected
+        continue;
       }
+
+      for (const location of shipLocation) {
+        board[location[0]][location[1]] = BattleShipCellStatus.BOAT;
+      }
+      shipLocations.push(...shipLocation);
+      i++; // Increment loop counter only on successful placement
     }
+
     return shipLocations;
   }
 

@@ -1,6 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { BattleshipLegendComponent } from './battleship-legend.component';
+import { MatCardModule } from "@angular/material/card";
+import { MatIconModule } from "@angular/material/icon";
+
+import { provideZoneChangeDetection } from '@angular/core';
 
 describe('BattleshipLegendComponent', () => {
   let component: BattleshipLegendComponent;
@@ -8,7 +12,12 @@ describe('BattleshipLegendComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [BattleshipLegendComponent]
+      declarations: [BattleshipLegendComponent],
+      imports: [
+        MatCardModule,
+        MatIconModule
+      ],
+      providers: [provideZoneChangeDetection()]
     })
       .compileComponents();
 

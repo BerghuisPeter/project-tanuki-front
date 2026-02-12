@@ -1,4 +1,15 @@
-<mat-toolbar>
+<mat-toolbar color="primary">
   <mat-icon class="header_icon" svgIcon="racoon"></mat-icon>
-  <span>{{title | titlecase}}</span>
+  <span>{{ title | titlecase }}</span>
+  <span class="spacer"></span>
+  <button
+    (click)="themeService.toggleTheme()"
+    [matTooltip]="ThemeTooltip"
+    aria-label="Toggle theme"
+    mat-icon-button
+  >
+    <mat-icon>
+      {{ isDarkMode ? 'light_mode' : 'dark_mode' }}
+    </mat-icon>
+  </button>
 </mat-toolbar>
