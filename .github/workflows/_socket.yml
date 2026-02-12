@@ -73,4 +73,4 @@ jobs:
           suffix: ${{ github.sha }}
           env_vars: |
             NODE_ENV=${{ inputs.environment == 'dev' && 'development' || 'production' }}
-            CORS_DOMAIN="${{ vars.APP_CORS_ALLOWED_ORIGINS }}"
+            CORS_DOMAIN=${{ vars.APP_CORS_ALLOWED_ORIGINS }}
