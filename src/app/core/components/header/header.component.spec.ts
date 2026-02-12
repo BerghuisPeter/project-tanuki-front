@@ -13,8 +13,8 @@ describe('HeaderComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [HeaderComponent],
-      imports: [MatToolbarModule,
+      imports: [HeaderComponent,
+        MatToolbarModule,
         MatButtonModule,
         MatIconModule],
       providers: [

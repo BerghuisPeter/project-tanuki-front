@@ -1,19 +1,15 @@
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
-import { CoreModule } from "./core/core.module";
 import { provideHttpClient } from "@angular/common/http";
-import { AppRoutingModule } from "./app.routing";
 
 import { provideZoneChangeDetection } from '@angular/core';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [
+      imports: [
         AppComponent
       ],
-      imports: [AppRoutingModule,
-        CoreModule],
       providers: [
         provideHttpClient(),
         provideZoneChangeDetection()

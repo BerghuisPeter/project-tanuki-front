@@ -6,10 +6,9 @@ import { of, Subject } from 'rxjs';
 import { ReactiveFormsModule } from "@angular/forms";
 import { MatInputModule } from "@angular/material/input";
 import { MatListModule } from "@angular/material/list";
-import { NoopAnimationsModule } from "@angular/platform-browser/animations";
-import { CharToColorModule } from "../../shared/directives/char-to-color/char-to-color.module";
 import { LoadingComponent } from "../../shared/components/loading/loading.component";
 import { provideZoneChangeDetection } from '@angular/core';
+import { CharToColorDirective } from "../../shared/directives/char-to-color/char-to-color.directive";
 
 describe('GlobalChatComponent', () => {
   let component: GlobalChatComponent;
@@ -44,13 +43,12 @@ describe('GlobalChatComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [GlobalChatComponent],
       imports: [
+        GlobalChatComponent,
         ReactiveFormsModule,
         MatInputModule,
         MatListModule,
-        NoopAnimationsModule,
-        CharToColorModule,
+        CharToColorDirective,
         LoadingComponent
       ],
       providers: [

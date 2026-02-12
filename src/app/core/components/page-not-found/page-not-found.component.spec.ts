@@ -10,7 +10,7 @@ describe('PageNotFoundComponentComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PageNotFoundComponent],
+      imports: [PageNotFoundComponent],
       providers: [provideZoneChangeDetection()]
     })
       .compileComponents();
