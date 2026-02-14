@@ -16,7 +16,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from "../../core/services/auth.service";
-import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { Router } from "@angular/router";
 import { APP_PATHS } from "../../shared/models/app-paths.model";
 
@@ -31,15 +30,16 @@ import { APP_PATHS } from "../../shared/models/app-paths.model";
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatIconModule,
-    MatProgressSpinner
+    MatIconModule
   ],
+  styleUrls: ['./authentication.component.scss'],
   templateUrl: './authentication.component.html',
 })
 export class AuthenticationComponent {
   loginForm: FormGroup;
   isLoginMode = signal(true);
   isLoadingQuery = signal(false);
+  authenticationError = signal<string | null>(null);
 
   constructor(private fb: FormBuilder,
               private readonly authService: AuthService,
@@ -87,16 +87,32 @@ export class AuthenticationComponent {
 
   handleLogin() {
     this.isLoadingQuery.set(true);
+    this.authenticationError.set(null);
     this.authService.login(this.loginForm.value.email, this.loginForm.value.password).subscribe({
       next: () => this.router.navigate([APP_PATHS.HOME], { replaceUrl: true }),
-      error: () => this.isLoadingQuery.set(false)
+      error: (err) => {
+        if (err.status === 401) {
+          this.authenticationError.set('Invalid email or password');
+        } else {
+          this.authenticationError.set('Server error. Try again.');
+        }
+      },
+      complete: () => this.isLoadingQuery.set(false)
     });
   }
 
   handleRegister() {
     this.isLoadingQuery.set(true);
+    this.authenticationError.set(null);
     this.authService.register(this.loginForm.value.email, this.loginForm.value.password).subscribe({
       next: () => this.router.navigate([APP_PATHS.HOME], { replaceUrl: true }),
+      error: (err) => {
+        if (err.status === 401) {
+          this.authenticationError.set('Invalid email or password');
+        } else {
+          this.authenticationError.set('Server error. Try again.');
+        }
+      },
       complete: () => this.isLoadingQuery.set(false)
     });
   }

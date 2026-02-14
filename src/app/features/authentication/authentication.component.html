@@ -36,7 +36,11 @@
       <button [disabled]="loginForm.invalid || isLoadingQuery()" class="h-12 text-lg" color="primary" mat-raised-button
               type="submit">
         @if (isLoadingQuery()) {
-          <mat-spinner size="small"/>
+          <div class="loading-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
         } @else {
           {{ isLoginMode() ? 'Login' : 'Register' }}
         }
