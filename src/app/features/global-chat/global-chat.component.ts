@@ -9,6 +9,7 @@ import { MatListModule } from "@angular/material/list";
 import { MatIconModule } from "@angular/material/icon";
 import { CharToColorDirective } from "../../shared/directives/char-to-color/char-to-color.directive";
 import { LoadingComponent } from "../../shared/components/loading/loading.component";
+import { UserService } from "../../core/services/user.service";
 
 @Component({
   selector: 'app-global-chat',
@@ -40,7 +41,7 @@ export class GlobalChatComponent implements OnInit, OnDestroy {
   inputFormControl: FormControl;
   @ViewChild('chatMessagesContainer') chatMessagesContainer!: ElementRef;
 
-  constructor(public chatService: ChatService, private readonly changeDetectorRef: ChangeDetectorRef) {
+  constructor(public chatService: ChatService, private readonly changeDetectorRef: ChangeDetectorRef, public readonly userService: UserService) {
     this.inputFormControl = new FormControl<string>('', Validators.required);
     this.connection = chatService.connect();
   }

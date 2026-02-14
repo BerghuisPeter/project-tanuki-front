@@ -1,5 +1,5 @@
 const app = require('express')();
-const http = require('http').Server(app);
+const http = require('node:http').Server(app);
 const { Server } = require("socket.io");
 
 const EXPOSED_PORT = process.env.PORT || 8000;

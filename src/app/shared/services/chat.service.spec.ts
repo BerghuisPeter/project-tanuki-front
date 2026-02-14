@@ -6,6 +6,7 @@ import { Socket } from "ngx-socket-io";
 
 
 import { provideZoneChangeDetection } from '@angular/core';
+import { UserService } from "../../core/services/user.service";
 
 class MockSocket {
   emit = jasmine.createSpy('emit');
@@ -37,6 +38,7 @@ describe('ChatService', () => {
     TestBed.configureTestingModule({
       providers: [
         ChatService,
+        UserService,
         { provide: Socket, useValue: mockSocket },
         provideZoneChangeDetection()
       ]
