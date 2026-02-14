@@ -89,15 +89,18 @@ export class AuthenticationComponent {
     this.isLoadingQuery.set(true);
     this.authenticationError.set(null);
     this.authService.login(this.loginForm.value.email, this.loginForm.value.password).subscribe({
-      next: () => this.router.navigate([APP_PATHS.HOME], { replaceUrl: true }),
+      next: () => {
+        this.isLoadingQuery.set(false);
+        this.router.navigate([APP_PATHS.HOME], { replaceUrl: true });
+      },
       error: (err) => {
+        this.isLoadingQuery.set(false);
         if (err.status === 401) {
           this.authenticationError.set('Invalid email or password');
         } else {
           this.authenticationError.set('Server error. Try again.');
         }
-      },
-      complete: () => this.isLoadingQuery.set(false)
+      }
     });
   }
 
@@ -105,15 +108,18 @@ export class AuthenticationComponent {
     this.isLoadingQuery.set(true);
     this.authenticationError.set(null);
     this.authService.register(this.loginForm.value.email, this.loginForm.value.password).subscribe({
-      next: () => this.router.navigate([APP_PATHS.HOME], { replaceUrl: true }),
+      next: () => {
+        this.isLoadingQuery.set(false);
+        this.router.navigate([APP_PATHS.HOME], { replaceUrl: true });
+      },
       error: (err) => {
-        if (err.status === 401) {
-          this.authenticationError.set('Invalid email or password');
+        this.isLoadingQuery.set(false);
+        if (err.status === 409) {
+          this.authenticationError.set('Email already registered. Try to login instead.');
         } else {
           this.authenticationError.set('Server error. Try again.');
         }
-      },
-      complete: () => this.isLoadingQuery.set(false)
+      }
     });
   }
 }
