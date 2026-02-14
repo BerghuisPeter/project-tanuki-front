@@ -1,4 +1,4 @@
-import { ApplicationConfig, importProvidersFrom } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, inject, provideAppInitializer } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
@@ -7,6 +7,7 @@ import { environment } from '../environments/environment';
 import { BASE_PATH as BASE_PATH_AUTH } from "../openApi/auth";
 import { BASE_PATH as BASE_PATH_PROFILE } from "../openApi/profile";
 import { authInterceptor } from "./core/interceptors/auth.interceptor";
+import { AuthService } from "./core/services/auth.service";
 
 const options = {
   autoConnect: false,
@@ -24,6 +25,10 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptors([authInterceptor])),
     importProvidersFrom(SocketIoModule.forRoot(config)),
     { provide: BASE_PATH_AUTH, useValue: environment.authServiceUrl },
-    { provide: BASE_PATH_PROFILE, useValue: environment.profileServiceUrl }
+    { provide: BASE_PATH_PROFILE, useValue: environment.profileServiceUrl },
+    provideAppInitializer(() => {
+      const authService = inject(AuthService);
+      return authService.initializeAuth();
+    })
   ]
 };

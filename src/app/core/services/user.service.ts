@@ -2,6 +2,7 @@ import { computed, Injectable, signal } from '@angular/core';
 import { v4 as uuidv4 } from 'uuid';
 import { User } from '../../shared/models/user.model';
 import { Router } from "@angular/router";
+import { UserResponse } from "../../../openApi/auth";
 
 @Injectable({
   providedIn: 'root',
@@ -16,9 +17,9 @@ export class UserService {
   constructor(private readonly router: Router) {
   }
 
-  setLoggedInUser(id: string): void {
+  setLoggedInUser(userResponse: UserResponse): void {
     const user: User = {
-      id,
+      ...userResponse,
       isGuest: false,
     };
     this.userSignal.set(user);

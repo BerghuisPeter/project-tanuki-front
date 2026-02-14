@@ -5,11 +5,13 @@ import {
   AuthResponse,
   LoginRequest,
   RefreshRequest,
-  RegisterRequest
+  RegisterRequest,
+  UserResponse
 } from "../../../openApi/auth";
-import { tap } from "rxjs";
+import { firstValueFrom, tap } from "rxjs";
 import { Router } from "@angular/router";
 import { APP_PATHS } from "../../shared/models/app-paths.model";
+import { HttpErrorResponse } from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root',
@@ -61,9 +63,39 @@ export class AuthService {
     return localStorage.getItem('refresh_token');
   }
 
+  async initializeAuth(): Promise<void> {
+    const accessToken = this.getAccessToken();
+    if (!accessToken) {
+      return;
+    }
+
+    try {
+      const user: UserResponse = await firstValueFrom(this.authControllerAuthService.me());
+      this.userService.setLoggedInUser(user);
+    } catch (error) {
+      if (error instanceof HttpErrorResponse && error.status === 401) {
+        const refreshToken = this.getRefreshToken();
+        if (refreshToken) {
+          try {
+            await firstValueFrom(this.refreshToken(refreshToken));
+            const user = await firstValueFrom(this.authControllerAuthService.me());
+            this.userService.setLoggedInUser(user);
+          } catch (refreshError) {
+            console.error('Failed to refresh token or get user after refresh', refreshError);
+            this.logout();
+          }
+        } else {
+          this.logout();
+        }
+      } else {
+        console.error('Error fetching user info', error);
+      }
+    }
+  }
+
   private handleAuthResponse(authRes: AuthResponse) {
     localStorage.setItem('access_token', authRes.accessToken);
     localStorage.setItem('refresh_token', authRes.refreshToken);
-    this.userService.setLoggedInUser(authRes.user.id);
+    this.userService.setLoggedInUser(authRes.user);
   }
 }
