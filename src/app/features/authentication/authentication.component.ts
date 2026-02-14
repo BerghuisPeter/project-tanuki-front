@@ -52,6 +52,7 @@ export class AuthenticationComponent {
   }
 
   toggleMode() {
+    this.authenticationError.set(null);
     this.isLoginMode.update(v => !v);
     const confirmPassword = this.loginForm.get('confirmPassword');
     if (this.isLoginMode()) {
