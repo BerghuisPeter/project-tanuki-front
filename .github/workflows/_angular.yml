@@ -54,6 +54,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Generate OpenAPI client
+        run: |
+          if [ "${{ inputs.environment }}" = "prod" ]; then
+            npm run generate:api:prod
+          else
+            npm run generate:api
+          fi
+
       - name: Lint
         run: npm run lint
 
