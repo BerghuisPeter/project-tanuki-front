@@ -1,7 +1,7 @@
 export enum APP_PATHS {
   HOME = '/',
-  LOGIN = 'login',
+  AUTHENTICATION = 'authentication',
   BOAT = 'boat',
   CHAT = 'chat',
-  GOCHUIN = 'GOCHUIN'
+  GOCHUIN = 'gochuin'
 }

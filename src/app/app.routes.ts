@@ -17,7 +17,7 @@ export const routes: Routes = [
     loadChildren: () => import('./features/battleship/battleship.module').then(m => m.BattleshipModule)
   },
   {
-    path: APP_PATHS.LOGIN,
+    path: APP_PATHS.AUTHENTICATION,
     loadComponent: () => import('./features/authentication/authentication.component').then(m => m.AuthenticationComponent)
   },
   {

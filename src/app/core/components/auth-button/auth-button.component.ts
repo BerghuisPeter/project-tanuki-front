@@ -12,6 +12,7 @@ import { APP_PATHS } from "../../../shared/models/app-paths.model";
   standalone: true,
   imports: [MatIconModule, MatButtonModule, MatTooltipModule],
   templateUrl: "./auth-button.component.html",
+  styleUrl: "./auth-button.component.scss",
 })
 export class AuthButtonComponent {
   constructor(
@@ -26,6 +27,6 @@ export class AuthButtonComponent {
   }
 
   toLogin(): void {
-    this.router.navigate([APP_PATHS.LOGIN]);
+    this.router.navigate([APP_PATHS.AUTHENTICATION]);
   }
 }
