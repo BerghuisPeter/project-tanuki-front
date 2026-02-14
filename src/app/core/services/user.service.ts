@@ -7,7 +7,7 @@ import { User } from '../../shared/models/user.model';
 })
 export class UserService {
   private readonly USER_KEY = 'tanuki_user';
-  private userSignal = signal<User>(this.loadOrCreateUser());
+  private readonly userSignal = signal<User>(this.loadOrCreateGuestUser());
 
   readonly user = this.userSignal.asReadonly();
 
@@ -27,9 +27,15 @@ export class UserService {
     };
     this.userSignal.set(newUser);
     this.saveUser(newUser);
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
   }
 
-  private loadOrCreateUser(): User {
+  isLoggedIn(): boolean {
+    return !this.user().isGuest;
+  }
+
+  private loadOrCreateGuestUser(): User {
     const savedUser = localStorage.getItem(this.USER_KEY);
     if (savedUser) {
       try {
