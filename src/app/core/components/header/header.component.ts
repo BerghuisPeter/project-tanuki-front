@@ -6,14 +6,14 @@ import { MatButtonModule } from "@angular/material/button";
 import { TitleCasePipe } from "@angular/common";
 import { ThemeService } from "../../services/theme.service";
 import { MatTooltip } from "@angular/material/tooltip";
-import { UserService } from "../../services/user.service";
+import { AuthButtonComponent } from "../auth-button/auth-button.component";
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
   standalone: true,
-  imports: [MatIconModule, MatToolbarModule, MatButtonModule, TitleCasePipe, MatTooltip],
+  imports: [MatIconModule, MatToolbarModule, MatButtonModule, TitleCasePipe, MatTooltip, AuthButtonComponent],
 })
 export class HeaderComponent {
   @Input() title: string = 'headerTitle';
@@ -21,8 +21,7 @@ export class HeaderComponent {
   constructor(
     private readonly matIconRegistry: MatIconRegistry,
     private readonly domSanitizer: DomSanitizer,
-    public readonly themeService: ThemeService,
-    public readonly userService: UserService
+    public readonly themeService: ThemeService
   ) {
 
     this.matIconRegistry.addSvgIcon(
@@ -37,14 +36,5 @@ export class HeaderComponent {
 
   get ThemeTooltip(): string {
     return this.isDarkMode ? 'Light mode' : 'Dark mode';
-  }
-
-  logout(): void {
-    this.userService.logout();
-  }
-
-  login(): void {
-    // TODO: Implement login modal or navigation
-    console.log('Login clicked');
   }
 }

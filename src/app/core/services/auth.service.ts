@@ -32,6 +32,15 @@ export class AuthService {
       );
   }
 
+  logout() {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    return this.authControllerAuthService.logout()
+      .pipe(
+        tap(() => this.userService.logout())
+      );
+  }
+
   refreshToken(refreshToken: string) {
     const refreshRequest: RefreshRequest = { refreshToken: refreshToken };
     return this.authControllerAuthService.refresh(refreshRequest).pipe(
@@ -50,6 +59,6 @@ export class AuthService {
   private handleAuthResponse(authRes: AuthResponse) {
     localStorage.setItem('access_token', authRes.accessToken);
     localStorage.setItem('refresh_token', authRes.refreshToken);
-    this.userService.setLoggedInUser(authRes.user.id)
+    this.userService.setLoggedInUser(authRes.user.id);
   }
 }

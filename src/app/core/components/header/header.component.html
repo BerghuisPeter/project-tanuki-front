@@ -6,61 +6,16 @@
 
   <span class="spacer flex-grow"></span>
 
-  <div class="flex items-center gap-1 sm:gap-2">
-    @if (userService.isLoggedIn()) {
+  <app-auth-button></app-auth-button>
 
-      <!-- Desktop text -->
-      <button
-        (click)="logout()"
-        class="!hidden sm:!inline-flex items-center"
-        mat-button
-      >
-        <mat-icon class="mr-1">logout</mat-icon>
-        Logout
-      </button>
-
-      <!-- Mobile icon -->
-      <button
-        (click)="logout()"
-        class="sm:!hidden"
-        mat-icon-button
-        matTooltip="Logout"
-      >
-        <mat-icon>logout</mat-icon>
-      </button>
-
-    } @else {
-
-      <!-- Desktop text -->
-      <button
-        (click)="login()"
-        class="!hidden sm:!inline-flex items-center"
-        mat-button
-      >
-        <mat-icon class="mr-1">login</mat-icon>
-        Login
-      </button>
-
-      <!-- Mobile icon -->
-      <button
-        (click)="login()"
-        class="sm:!hidden"
-        mat-icon-button
-        matTooltip="Login"
-      >
-        <mat-icon>login</mat-icon>
-      </button>
-    }
-
-    <button
-      (click)="themeService.toggleTheme()"
-      [matTooltip]="ThemeTooltip"
-      aria-label="Toggle theme"
-      mat-icon-button
-    >
-      <mat-icon>
-        {{ isDarkMode ? 'light_mode' : 'dark_mode' }}
-      </mat-icon>
-    </button>
-  </div>
+  <button
+    (click)="themeService.toggleTheme()"
+    [matTooltip]="ThemeTooltip"
+    aria-label="Toggle theme"
+    mat-icon-button
+  >
+    <mat-icon>
+      {{ isDarkMode ? 'light_mode' : 'dark_mode' }}
+    </mat-icon>
+  </button>
 </mat-toolbar>

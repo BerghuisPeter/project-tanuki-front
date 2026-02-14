@@ -1,6 +1,7 @@
 import { computed, Injectable, signal } from '@angular/core';
 import { v4 as uuidv4 } from 'uuid';
 import { User } from '../../shared/models/user.model';
+import { Router } from "@angular/router";
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +12,9 @@ export class UserService {
 
   readonly user = this.userSignal.asReadonly();
   readonly isLoggedIn = computed(() => !this.user().isGuest);
+
+  constructor(private readonly router: Router) {
+  }
 
   setLoggedInUser(id: string): void {
     const user: User = {
@@ -28,8 +32,6 @@ export class UserService {
     };
     this.userSignal.set(newUser);
     this.saveUser(newUser);
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
   }
 
   private loadOrCreateGuestUser(): User {
