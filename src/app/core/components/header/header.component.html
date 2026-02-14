@@ -1,15 +1,66 @@
-<mat-toolbar color="primary">
-  <mat-icon class="header_icon" svgIcon="racoon"></mat-icon>
-  <span>{{ title | titlecase }}</span>
-  <span class="spacer"></span>
-  <button
-    (click)="themeService.toggleTheme()"
-    [matTooltip]="ThemeTooltip"
-    aria-label="Toggle theme"
-    mat-icon-button
-  >
-    <mat-icon>
-      {{ isDarkMode ? 'light_mode' : 'dark_mode' }}
-    </mat-icon>
-  </button>
+<mat-toolbar class="flex items-center px-4" color="primary">
+  <div class="flex items-center shrink-0">
+    <mat-icon class="header_icon" svgIcon="racoon"></mat-icon>
+    <span class="ml-2 text-lg font-semibold">{{ title | titlecase }}</span>
+  </div>
+
+  <span class="spacer flex-grow"></span>
+
+  <div class="flex items-center gap-1 sm:gap-2">
+    @if (userService.isLoggedIn()) {
+
+      <!-- Desktop text -->
+      <button
+        (click)="logout()"
+        class="!hidden sm:!inline-flex items-center"
+        mat-button
+      >
+        <mat-icon class="mr-1">logout</mat-icon>
+        Logout
+      </button>
+
+      <!-- Mobile icon -->
+      <button
+        (click)="logout()"
+        class="sm:!hidden"
+        mat-icon-button
+        matTooltip="Logout"
+      >
+        <mat-icon>logout</mat-icon>
+      </button>
+
+    } @else {
+
+      <!-- Desktop text -->
+      <button
+        (click)="login()"
+        class="!hidden sm:!inline-flex items-center"
+        mat-button
+      >
+        <mat-icon class="mr-1">login</mat-icon>
+        Login
+      </button>
+
+      <!-- Mobile icon -->
+      <button
+        (click)="login()"
+        class="sm:!hidden"
+        mat-icon-button
+        matTooltip="Login"
+      >
+        <mat-icon>login</mat-icon>
+      </button>
+    }
+
+    <button
+      (click)="themeService.toggleTheme()"
+      [matTooltip]="ThemeTooltip"
+      aria-label="Toggle theme"
+      mat-icon-button
+    >
+      <mat-icon>
+        {{ isDarkMode ? 'light_mode' : 'dark_mode' }}
+      </mat-icon>
+    </button>
+  </div>
 </mat-toolbar>

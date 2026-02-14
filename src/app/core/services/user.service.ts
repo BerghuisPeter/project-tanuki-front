@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { computed, Injectable, signal } from '@angular/core';
 import { v4 as uuidv4 } from 'uuid';
 import { User } from '../../shared/models/user.model';
 
@@ -10,6 +10,7 @@ export class UserService {
   private readonly userSignal = signal<User>(this.loadOrCreateGuestUser());
 
   readonly user = this.userSignal.asReadonly();
+  readonly isLoggedIn = computed(() => !this.user().isGuest);
 
   setLoggedInUser(id: string): void {
     const user: User = {
@@ -29,10 +30,6 @@ export class UserService {
     this.saveUser(newUser);
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
-  }
-
-  isLoggedIn(): boolean {
-    return !this.user().isGuest;
   }
 
   private loadOrCreateGuestUser(): User {
