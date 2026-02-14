@@ -46,3 +46,4 @@ Thumbs.db
 
 # Tooling/workspace
 /.nx
+/src/openApi/
