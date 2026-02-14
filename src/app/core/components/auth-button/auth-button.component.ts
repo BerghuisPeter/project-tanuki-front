@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, signal } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { MatTooltipModule } from "@angular/material/tooltip";
@@ -15,6 +15,9 @@ import { APP_PATHS } from "../../../shared/models/app-paths.model";
   styleUrl: "./auth-button.component.scss",
 })
 export class AuthButtonComponent {
+
+  protected readonly isLoggingOut = signal<boolean>(false);
+
   constructor(
     public readonly userService: UserService,
     private readonly authService: AuthService,
@@ -23,7 +26,11 @@ export class AuthButtonComponent {
   }
 
   logout(): void {
-    this.authService.logout().subscribe();
+    this.isLoggingOut.set(true);
+    this.authService.logout().subscribe({
+      next: () => this.isLoggingOut.set(false),
+      error: () => this.isLoggingOut.set(false),
+    });
   }
 
   toLogin(): void {

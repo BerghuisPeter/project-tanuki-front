@@ -73,7 +73,10 @@ export class AuthService {
       const user: UserResponse = await firstValueFrom(this.authControllerAuthService.me());
       this.userService.setLoggedInUser(user);
     } catch (error) {
-      if (error instanceof HttpErrorResponse && error.status === 401) {
+      // TODO change to 401 in backend if expired if possible.
+      // 401 Unauthorized: Means "I don't know who you are" or "Your session has expired/is invalid."
+      // 403 Forbidden: Means "You don't have permission to access this resource."
+      if (error instanceof HttpErrorResponse && error.status === 403) {
         const refreshToken = this.getRefreshToken();
         if (refreshToken) {
           try {
