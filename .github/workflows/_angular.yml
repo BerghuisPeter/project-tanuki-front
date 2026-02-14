@@ -34,6 +34,12 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
+      - name: Set up JDK 21 for openapi-generator-cli
+        uses: actions/setup-java@v5
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
       - name: Cache node modules
         id: cache-node-modules
         uses: actions/cache@v5

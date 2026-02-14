@@ -23,7 +23,10 @@ Project Tanuki is a web application featuring a **Real-time Global Chat** and a 
 
 - [Node.js](https://nodejs.org/) (v18+ recommended)
 - [npm](https://www.npmjs.com/)
+- [Java JDK](https://adoptium.net/) (v11+ required for OpenAPI generator, v17+ recommended)
 - [Docker](https://www.docker.com/) (optional, for containerized deployment)
+
+> **Note:** Ensure Java is added to your system's Environment Variables (`PATH`). You can verify it by running `java -version` in your terminal.
 
 ### 1. Clone the repository
 
@@ -50,8 +53,11 @@ In a new terminal, from the project root:
 
 ```bash
 npm install
+npm run generate:api
 npm start
 ```
+
+**Note:** You must run `npm run generate:api` before the first launch or whenever the OpenAPI specifications change. This script requires Java to be installed.
 
 Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
@@ -59,15 +65,17 @@ Navigate to `http://localhost:4200/`. The application will automatically reload 
 
 ## 📜 Available Scripts
 
-| Command                 | Description                                       |
-|-------------------------|---------------------------------------------------|
-| `npm start`             | Runs the Angular app in development mode.         |
-| `npm run build`         | Builds the project for production.                |
-| `npm run test`          | Runs unit tests via Karma.                        |
-| `npm run test:headless` | Runs unit tests in headless Chrome (CI).          |
-| `npm run socket-server` | Starts the socket server from the root directory. |
-| `npm run lint`          | Lints the project code.                           |
-| `npm run sonar`         | Runs tests, linting, and SonarQube analysis.      |
+| Command                     | Description                                       |
+|-----------------------------|---------------------------------------------------|
+| `npm start`                 | Runs the Angular app in development mode.         |
+| `npm run build`             | Builds the project for production.                |
+| `npm run test`              | Runs unit tests via Karma.                        |
+| `npm run test:headless`     | Runs unit tests in headless Chrome (CI).          |
+| `npm run socket-server`     | Starts the socket server from the root directory. |
+| `npm run generate:api`      | Generates OpenAPI clients for development.        |
+| `npm run generate:api:prod` | Generates OpenAPI clients for production.         |
+| `npm run lint`              | Lints the project code.                           |
+| `npm run sonar`             | Runs tests, linting, and SonarQube analysis.      |
 
 ---
 
