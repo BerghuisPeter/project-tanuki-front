@@ -4,6 +4,8 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { UserService } from "../../services/user.service";
 import { AuthService } from "../../services/auth.service";
+import { Router } from "@angular/router";
+import { APP_PATHS } from "../../../shared/models/app-paths.model";
 
 @Component({
   selector: "app-auth-button",
@@ -14,7 +16,8 @@ import { AuthService } from "../../services/auth.service";
 export class AuthButtonComponent {
   constructor(
     public readonly userService: UserService,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private readonly router: Router
   ) {
   }
 
@@ -22,8 +25,7 @@ export class AuthButtonComponent {
     this.authService.logout().subscribe();
   }
 
-  login(): void {
-    console.log('login clicked!');
-    // this.authService.login().subscribe(() => console.log('logged in!'));
+  toLogin(): void {
+    this.router.navigate([APP_PATHS.LOGIN]);
   }
 }

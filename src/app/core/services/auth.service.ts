@@ -8,12 +8,14 @@ import {
   RegisterRequest
 } from "../../../openApi/auth";
 import { tap } from "rxjs";
+import { Router } from "@angular/router";
+import { APP_PATHS } from "../../shared/models/app-paths.model";
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private readonly userService: UserService, private readonly authControllerAuthService: AuthControllerAuthService) {
+  constructor(private readonly userService: UserService, private readonly authControllerAuthService: AuthControllerAuthService, private readonly router: Router) {
   }
 
   register(email: string, password: string) {
@@ -33,11 +35,14 @@ export class AuthService {
   }
 
   logout() {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
     return this.authControllerAuthService.logout()
       .pipe(
-        tap(() => this.userService.logout())
+        tap(() => {
+          this.userService.logout();
+          this.router.navigate([APP_PATHS.HOME]);
+          localStorage.removeItem('access_token');
+          localStorage.removeItem('refresh_token');
+        })
       );
   }
 

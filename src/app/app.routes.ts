@@ -17,6 +17,10 @@ export const routes: Routes = [
     loadChildren: () => import('./features/battleship/battleship.module').then(m => m.BattleshipModule)
   },
   {
+    path: APP_PATHS.LOGIN,
+    loadComponent: () => import('./features/authentication/authentication.component').then(m => m.AuthenticationComponent)
+  },
+  {
     path: '**',
     component: PageNotFoundComponent
   }
