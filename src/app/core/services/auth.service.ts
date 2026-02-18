@@ -8,7 +8,7 @@ import {
   RegisterRequest,
   UserResponse
 } from "../../../openApi/auth";
-import { firstValueFrom, tap } from "rxjs";
+import { catchError, firstValueFrom, tap, throwError } from "rxjs";
 import { Router } from "@angular/router";
 import { APP_PATHS } from "../../shared/models/app-paths.model";
 import { HttpErrorResponse } from "@angular/common/http";
@@ -36,16 +36,22 @@ export class AuthService {
       );
   }
 
-  logout() {
+  logout(redirectPath: string = APP_PATHS.HOME) {
     return this.authControllerAuthService.logout()
       .pipe(
-        tap(() => {
-          this.userService.logout();
-          this.router.navigate([APP_PATHS.HOME]);
-          localStorage.removeItem('access_token');
-          localStorage.removeItem('refresh_token');
+        tap(() => this.clearSessionState(redirectPath)),
+        catchError((err) => {
+          this.clearSessionState(redirectPath);
+          return throwError(() => err);
         })
       );
+  }
+
+  clearSessionState(redirectPath: string = APP_PATHS.HOME) {
+    this.userService.logout();
+    this.router.navigate([redirectPath]);
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
   }
 
   refreshToken(refreshToken: string) {
@@ -73,24 +79,10 @@ export class AuthService {
       const user: UserResponse = await firstValueFrom(this.authControllerAuthService.me());
       this.userService.setLoggedInUser(user);
     } catch (error) {
-      // TODO change to 401 in backend if expired if possible.
-      // 401 Unauthorized: Means "I don't know who you are" or "Your session has expired/is invalid."
-      // 403 Forbidden: Means "You don't have permission to access this resource."
-      if (error instanceof HttpErrorResponse && error.status === 403) {
-        const refreshToken = this.getRefreshToken();
-        if (refreshToken) {
-          try {
-            await firstValueFrom(this.refreshToken(refreshToken));
-            const user = await firstValueFrom(this.authControllerAuthService.me());
-            this.userService.setLoggedInUser(user);
-          } catch (refreshError) {
-            console.error('Failed to refresh token or get user after refresh', refreshError);
-            this.logout();
-          }
-        } else {
-          this.logout();
-        }
-      } else {
+      // If error is 401, the interceptor handles the refresh flow.
+      // If it reaches here with 401, it means the refresh failed and interceptor already handled logout.
+      // If it's another error (like 403 or server down), we log it.
+      if (error instanceof HttpErrorResponse && error.status !== 401) {
         console.error('Error fetching user info', error);
       }
     }
