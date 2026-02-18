@@ -70,6 +70,7 @@ function handle401Error(req: HttpRequest<unknown>, next: HttpHandlerFn, authServ
           // If refresh fails, the session is already invalid on the backend.
           // We just need to clear local state and redirect to login.
           authService.clearSessionState(APP_PATHS.AUTHENTICATION);
+          authService.showSessionExpiredToast();
           return throwError(() => err);
         })
       );
@@ -77,6 +78,7 @@ function handle401Error(req: HttpRequest<unknown>, next: HttpHandlerFn, authServ
       isRefreshing = false;
       // No refresh token available, clear state and redirect
       authService.clearSessionState(APP_PATHS.AUTHENTICATION);
+      authService.showSessionExpiredToast();
       return throwError(() => new Error('No refresh token available'));
     }
   }

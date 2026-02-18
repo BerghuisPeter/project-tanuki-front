@@ -12,12 +12,13 @@ import { catchError, firstValueFrom, tap, throwError } from "rxjs";
 import { Router } from "@angular/router";
 import { APP_PATHS } from "../../shared/models/app-paths.model";
 import { HttpErrorResponse } from "@angular/common/http";
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private readonly userService: UserService, private readonly authControllerAuthService: AuthControllerAuthService, private readonly router: Router) {
+  constructor(private readonly userService: UserService, private readonly authControllerAuthService: AuthControllerAuthService, private readonly router: Router, private readonly snackBar: MatSnackBar) {
   }
 
   register(email: string, password: string) {
@@ -52,6 +53,15 @@ export class AuthService {
     this.router.navigate([redirectPath]);
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
+  }
+
+  showSessionExpiredToast() {
+    this.snackBar.open('Session timed out. Please log in again.', 'Close', {
+      duration: 5000,
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+      panelClass: ['bg-red-500', 'text-white']
+    });
   }
 
   refreshToken(refreshToken: string) {

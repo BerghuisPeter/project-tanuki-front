@@ -8,6 +8,8 @@ import { BASE_PATH as BASE_PATH_AUTH } from "../openApi/auth";
 import { BASE_PATH as BASE_PATH_PROFILE } from "../openApi/profile";
 import { authInterceptor } from "./core/interceptors/auth.interceptor";
 import { AuthService } from "./core/services/auth.service";
+import { provideAnimationsAsync } from "@angular/platform-browser/animations/async";
+import { MatSnackBarModule } from "@angular/material/snack-bar";
 
 const options = {
   autoConnect: false,
@@ -23,7 +25,9 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor])),
-    importProvidersFrom(SocketIoModule.forRoot(config)),
+    // Replace deprecated when Angular material has replacement.
+    provideAnimationsAsync(),
+    importProvidersFrom(SocketIoModule.forRoot(config), MatSnackBarModule),
     { provide: BASE_PATH_AUTH, useValue: environment.authServiceUrl },
     { provide: BASE_PATH_PROFILE, useValue: environment.profileServiceUrl },
     provideAppInitializer(() => {
