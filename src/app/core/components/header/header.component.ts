@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { RouterLink } from "@angular/router";
-import { MatIconModule, MatIconRegistry } from "@angular/material/icon";
-import { DomSanitizer } from "@angular/platform-browser";
+import { MatIconModule } from "@angular/material/icon";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatButtonModule } from "@angular/material/button";
 import { TitleCasePipe } from "@angular/common";
@@ -20,15 +19,8 @@ export class HeaderComponent {
   @Input() title: string = 'headerTitle';
 
   constructor(
-    private readonly matIconRegistry: MatIconRegistry,
-    private readonly domSanitizer: DomSanitizer,
     public readonly themeService: ThemeService
   ) {
-
-    this.matIconRegistry.addSvgIcon(
-      `racoon`,
-      this.domSanitizer.bypassSecurityTrustResourceUrl("assets/racoon.svg")
-    );
   }
 
   get isDarkMode(): boolean {

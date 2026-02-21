@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from "@angular/router";
 import { HeaderComponent } from "./core/components/header/header.component";
 import { PageLoaderComponent } from "./core/components/page-loader/page-loader.component";
+import { MatIconRegistry } from "@angular/material/icon";
+import { DomSanitizer } from "@angular/platform-browser";
 
 @Component({
   selector: 'app-root',
@@ -12,4 +14,12 @@ import { PageLoaderComponent } from "./core/components/page-loader/page-loader.c
 })
 export class AppComponent {
   title: string = 'project-tanuki';
+
+  constructor(private readonly matIconRegistry: MatIconRegistry,
+              private readonly domSanitizer: DomSanitizer,) {
+    this.matIconRegistry.addSvgIcon(
+      `racoon`,
+      this.domSanitizer.bypassSecurityTrustResourceUrl("assets/racoon.svg")
+    );
+  }
 }
