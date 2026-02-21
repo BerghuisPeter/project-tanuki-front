@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { RouterOutlet } from "@angular/router";
 import { HeaderComponent } from "./core/components/header/header.component";
 import { PageLoaderComponent } from "./core/components/page-loader/page-loader.component";
@@ -12,7 +12,7 @@ import { DomSanitizer } from "@angular/platform-browser";
   standalone: true,
   imports: [HeaderComponent, RouterOutlet, PageLoaderComponent]
 })
-export class AppComponent {
+export class AppComponent implements AfterViewInit {
   title: string = 'project-tanuki';
 
   constructor(private readonly matIconRegistry: MatIconRegistry,
@@ -21,5 +21,16 @@ export class AppComponent {
       `racoon`,
       this.domSanitizer.bypassSecurityTrustResourceUrl("assets/racoon.svg")
     );
+  }
+
+  ngAfterViewInit(): void {
+    const preloader = document.getElementById('preloader');
+    if (preloader) {
+      preloader.classList.add('fade-out');
+      // Remove from DOM after transition
+      setTimeout(() => {
+        preloader.remove();
+      }, 500);
+    }
   }
 }
