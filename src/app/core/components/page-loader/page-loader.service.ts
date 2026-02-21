@@ -12,7 +12,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 @Injectable({
   providedIn: 'root'
 })
-export class LoaderService {
+export class PageLoaderService {
   private readonly _loadingCount = signal(0);
   /**
    * Returns true if any process has requested a loader.

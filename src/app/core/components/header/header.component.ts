@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { RouterLink } from "@angular/router";
 import { MatIconModule, MatIconRegistry } from "@angular/material/icon";
 import { DomSanitizer } from "@angular/platform-browser";
 import { MatToolbarModule } from "@angular/material/toolbar";
@@ -13,7 +14,7 @@ import { AuthButtonComponent } from "../auth-button/auth-button.component";
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
   standalone: true,
-  imports: [MatIconModule, MatToolbarModule, MatButtonModule, TitleCasePipe, MatTooltip, AuthButtonComponent],
+  imports: [MatIconModule, MatToolbarModule, MatButtonModule, TitleCasePipe, MatTooltip, AuthButtonComponent, RouterLink],
 })
 export class HeaderComponent {
   @Input() title: string = 'headerTitle';
