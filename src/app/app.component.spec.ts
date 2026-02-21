@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { provideHttpClient } from "@angular/common/http";
+import { provideRouter } from "@angular/router";
 
 import { provideZoneChangeDetection } from '@angular/core';
 
@@ -12,6 +13,7 @@ describe('AppComponent', () => {
       ],
       providers: [
         provideHttpClient(),
+        provideRouter([]),
         provideZoneChangeDetection()
       ]
     }).compileComponents();
@@ -32,7 +34,7 @@ describe('AppComponent', () => {
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('span')?.textContent).toContain('Project-tanuki');
+    const app = fixture.componentInstance;
+    expect(app.title).toEqual('project-tanuki');
   });
 });

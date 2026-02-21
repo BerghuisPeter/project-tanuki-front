@@ -1,4 +1,4 @@
-module.exports = (io, socket) => {
+const battleshipHandler = (io, socket) => {
 
   let previousRoomId;
 
@@ -26,4 +26,5 @@ module.exports = (io, socket) => {
   socket.on("bs:join", joinChatRoom);
   socket.on("bs:sendMessage", sendMessage);
   socket.once("disconnect", onDisconnect);
-}
+};
+module.exports = battleshipHandler;

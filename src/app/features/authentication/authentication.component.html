@@ -1,0 +1,65 @@
+<div class="flex min-h-[80vh] items-center justify-center p-4">
+  <mat-card class="w-full max-w-md p-6">
+    <mat-card-header class="mb-4">
+      <mat-card-title class="text-2xl font-bold">
+        {{ isLoginMode() ? 'Login' : 'Create Account' }}
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form (ngSubmit)="onSubmit()" [formGroup]="loginForm" class="flex flex-col gap-4">
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Email</mat-label>
+          <input formControlName="email" matInput placeholder="email@example.com" type="email">
+          @if (loginForm.get('email')?.hasError('email')) {
+            <mat-error>Please enter a valid email</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Password</mat-label>
+          <input formControlName="password" matInput type="password">
+          @if (loginForm.get('password')?.hasError('minlength')) {
+            <mat-error>password needs to be at least 6 characters</mat-error>
+          }
+        </mat-form-field>
+
+        @if (!isLoginMode()) {
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Confirm Password</mat-label>
+            <input formControlName="confirmPassword" matInput type="password">
+            @if (loginForm.get('confirmPassword')?.hasError('samePasswords')) {
+              <mat-error>Password needs to be identical to other password</mat-error>
+            }
+          </mat-form-field>
+        }
+
+        @if (authenticationError()) {
+          <div class="text-red-500 text-sm bg-red-50 p-2 rounded border border-red-200 text-center">
+            {{ authenticationError() }}
+          </div>
+        }
+
+        <button [disabled]="loginForm.invalid || isLoadingQuery()" class="h-12 text-lg" color="primary"
+                mat-raised-button
+                type="submit">
+          @if (isLoadingQuery()) {
+            <div class="loading-dots">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          } @else {
+            {{ isLoginMode() ? 'Login' : 'Register' }}
+          }
+        </button>
+
+        <div class="mt-4 text-center">
+          <button (click)="toggleMode()" [ngClass]="{'hidden': isLoadingQuery()}" mat-button type="button">
+            {{ isLoginMode() ? "Don't have an account? Register" : "Already have an account? Login" }}
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

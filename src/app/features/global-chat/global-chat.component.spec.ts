@@ -37,7 +37,7 @@ describe('GlobalChatComponent', () => {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    sendMessage(room: string, msg: string) {
+    sendMessage(room: string, msg: string, user: string) {
     }
   }
 

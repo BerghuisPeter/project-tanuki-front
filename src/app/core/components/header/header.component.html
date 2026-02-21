@@ -1,7 +1,13 @@
-<mat-toolbar color="primary">
-  <mat-icon class="header_icon" svgIcon="racoon"></mat-icon>
-  <span>{{ title | titlecase }}</span>
-  <span class="spacer"></span>
+<mat-toolbar class="flex items-center px-4" color="primary">
+  <a class="flex items-center shrink-0 cursor-pointer no-underline text-inherit" routerLink="/">
+    <mat-icon class="header_icon" svgIcon="racoon"></mat-icon>
+  </a>
+  <span class="text-lg font-semibold">{{ title | titlecase }}</span>
+
+  <span class="spacer flex-grow"></span>
+
+  <app-auth-button></app-auth-button>
+
   <button
     (click)="themeService.toggleTheme()"
     [matTooltip]="ThemeTooltip"

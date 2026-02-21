@@ -1,5 +1,6 @@
 import { CharToColorDirective } from './char-to-color.directive';
 import { ElementRef, Renderer2 } from "@angular/core";
+import { TestBed } from "@angular/core/testing";
 
 describe('CharToColorDirective', () => {
   let renderer: jasmine.SpyObj<Renderer2>;
@@ -11,7 +12,16 @@ describe('CharToColorDirective', () => {
   it('should create an instance', () => {
     const mockElement: HTMLElement = document.createElement('span');
     const elementRef = new ElementRef<HTMLElement>(mockElement);
-    const directive = new CharToColorDirective(elementRef, renderer);
+
+    TestBed.configureTestingModule({
+      providers: [
+        CharToColorDirective,
+        { provide: ElementRef, useValue: elementRef },
+        { provide: Renderer2, useValue: renderer }
+      ]
+    });
+
+    const directive = TestBed.inject(CharToColorDirective);
     expect(directive).toBeTruthy();
   });
 
@@ -19,7 +29,16 @@ describe('CharToColorDirective', () => {
     const mockElement: HTMLElement = document.createElement('span');
     mockElement.innerText = 'A';
     const elementRef = new ElementRef<HTMLElement>(mockElement);
-    const directive = new CharToColorDirective(elementRef, renderer);
+
+    TestBed.configureTestingModule({
+      providers: [
+        CharToColorDirective,
+        { provide: ElementRef, useValue: elementRef },
+        { provide: Renderer2, useValue: renderer }
+      ]
+    });
+
+    const directive = TestBed.inject(CharToColorDirective);
 
     directive.ngAfterViewInit();
 

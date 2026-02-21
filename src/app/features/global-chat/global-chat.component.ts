@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Message } from "../../shared/models/message.model";
 import { FormControl, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ChatService } from "../../shared/services/chat.service";
@@ -9,6 +9,7 @@ import { MatListModule } from "@angular/material/list";
 import { MatIconModule } from "@angular/material/icon";
 import { CharToColorDirective } from "../../shared/directives/char-to-color/char-to-color.directive";
 import { LoadingComponent } from "../../shared/components/loading/loading.component";
+import { UserService } from "../../core/services/user.service";
 
 @Component({
   selector: 'app-global-chat',
@@ -35,15 +36,14 @@ import { LoadingComponent } from "../../shared/components/loading/loading.compon
 })
 export class GlobalChatComponent implements OnInit, OnDestroy {
 
-  connection;
   messages: (Message | string)[] = [];
-  inputFormControl: FormControl;
+  inputFormControl = new FormControl<string>('', { nonNullable: true, validators: [Validators.required] });
   @ViewChild('chatMessagesContainer') chatMessagesContainer!: ElementRef;
 
-  constructor(public chatService: ChatService, private readonly changeDetectorRef: ChangeDetectorRef) {
-    this.inputFormControl = new FormControl<string>('', Validators.required);
-    this.connection = chatService.connect();
-  }
+  public chatService = inject(ChatService);
+  public readonly userService = inject(UserService);
+  connection = this.chatService.connect();
+  private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
   ngOnInit(): void {
     this.chatService.joinChat('globalChat');

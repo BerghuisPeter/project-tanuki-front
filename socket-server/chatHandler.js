@@ -1,21 +1,21 @@
-module.exports = (io, socket) => {
+const chatHandler = (io, socket) => {
 
   let previousRoomId;
 
-  const joinChatRoom = (chatRoomName) => {
-    safeJoin(chatRoomName);
-    io.in(chatRoomName).emit("chat:systemNotification", `${socket.id} graced us with his presence.`);
+  const joinChatRoom = (roomId, userId) => {
+    safeJoin(roomId, userId);
+    io.in(roomId).emit("chat:systemNotification", `${userId} graced us with his presence.`);
   }
 
-  const safeJoin = (roomId) => {
+  const safeJoin = (roomId, userId) => {
     socket.leave(previousRoomId);
-    console.log(`NEW ${socket.id} is in room ${roomId}`);
+    console.log(`${userId} (socket: ${socket.id}) is in room ${roomId}`);
     socket.join(roomId);
     previousRoomId = roomId;
   }
 
-  const sendMessage = (roomName, value) => {
-    io.in(roomName).emit("chat:receiveMessage", { user: socket.id, value });
+  const sendMessage = (roomId, userId, value) => {
+    io.in(roomId).emit("chat:receiveMessage", { user: userId, value });
   }
 
   const onDisconnect = () => {
@@ -26,4 +26,5 @@ module.exports = (io, socket) => {
   socket.on("chat:join", joinChatRoom);
   socket.on("chat:sendMessage", sendMessage);
   socket.once("disconnect", onDisconnect);
-}
+};
+module.exports = chatHandler;

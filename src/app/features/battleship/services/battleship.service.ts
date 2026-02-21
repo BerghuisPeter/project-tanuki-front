@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Socket } from "ngx-socket-io";
 import { BehaviorSubject } from "rxjs";
 
@@ -12,8 +12,9 @@ export class BattleshipService {
 
   private readonly connectionErrorSubject = new BehaviorSubject<boolean>(false);
   public connectionError$ = this.connectionErrorSubject.asObservable();
+  private readonly socket = inject(Socket);
 
-  constructor(private readonly socket: Socket) {
+  constructor() {
     this.socket.fromEvent('connect').subscribe(() => {
       this.connectedSubject.next(true);
       this.connectionErrorSubject.next(false);
