@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   AbstractControl,
@@ -36,20 +36,18 @@ import { APP_PATHS } from "../../shared/models/app-paths.model";
   templateUrl: './authentication.component.html',
 })
 export class AuthenticationComponent {
-  loginForm: FormGroup;
   isLoginMode = signal(true);
   isLoadingQuery = signal(false);
   authenticationError = signal<string | null>(null);
 
-  constructor(private fb: FormBuilder,
-              private readonly authService: AuthService,
-              private readonly router: Router) {
-    this.loginForm = this.fb.group({
-      email: ['p@test.com', [Validators.required, Validators.email]],
-      password: ['123456', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['123456']
-    });
-  }
+  private readonly fb = inject(FormBuilder);
+  loginForm: FormGroup = this.fb.group({
+    email: ['p@test.com', [Validators.required, Validators.email]],
+    password: ['123456', [Validators.required, Validators.minLength(6)]],
+    confirmPassword: ['123456']
+  });
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
 
   toggleMode() {
     this.authenticationError.set(null);

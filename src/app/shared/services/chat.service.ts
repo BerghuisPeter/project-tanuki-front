@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Socket } from "ngx-socket-io";
 import { Message } from "../models/message.model";
 import { UserService } from "../../core/services/user.service";
@@ -7,12 +7,11 @@ import { UserService } from "../../core/services/user.service";
   providedIn: 'root'
 })
 export class ChatService {
+  private readonly socket = inject(Socket);
+  private readonly userService = inject(UserService);
 
   message = this.socket.fromEvent<Message, 'chat:receiveMessage'>('chat:receiveMessage');
   systemNotification = this.socket.fromEvent<string, 'chat:systemNotification'>('chat:systemNotification');
-
-  constructor(private readonly socket: Socket, private readonly userService: UserService) {
-  }
 
   connect() {
     return this.socket.connect();

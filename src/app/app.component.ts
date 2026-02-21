@@ -1,4 +1,4 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, inject } from '@angular/core';
 import { RouterOutlet } from "@angular/router";
 import { HeaderComponent } from "./core/components/header/header.component";
 import { PageLoaderComponent } from "./core/components/page-loader/page-loader.component";
@@ -14,9 +14,10 @@ import { DomSanitizer } from "@angular/platform-browser";
 })
 export class AppComponent implements AfterViewInit {
   title: string = 'project-tanuki';
+  private readonly matIconRegistry = inject(MatIconRegistry);
+  private readonly domSanitizer = inject(DomSanitizer);
 
-  constructor(private readonly matIconRegistry: MatIconRegistry,
-              private readonly domSanitizer: DomSanitizer,) {
+  constructor() {
     this.matIconRegistry.addSvgIcon(
       `racoon`,
       this.domSanitizer.bypassSecurityTrustResourceUrl("assets/racoon.svg")

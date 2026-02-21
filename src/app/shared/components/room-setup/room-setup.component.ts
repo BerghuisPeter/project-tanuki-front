@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnDestroy, Output } from '@angular/core';
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
 import { MatFormFieldModule } from "@angular/material/form-field";
@@ -28,10 +28,11 @@ export class RoomSetupComponent implements OnDestroy {
 
   roomCodeInputFormControl: FormControl;
   $roomCodeInputObs: Subscription;
-  uuid4Regex: RegExp;
+  uuid4Regex: RegExp = /^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;
 
-  constructor(private _snackBar: MatSnackBar) {
-    this.uuid4Regex = /^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;
+  private _snackBar = inject(MatSnackBar);
+
+  constructor() {
     this.roomCodeInputFormControl = new FormControl<string>('', Validators.pattern(this.uuid4Regex));
 
     this.$roomCodeInputObs = this.roomCodeInputFormControl.valueChanges

@@ -1,4 +1,4 @@
-import { computed, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { v4 as uuidv4 } from 'uuid';
 import { User } from '../../shared/models/user.model';
 import { Router } from "@angular/router";
@@ -13,9 +13,7 @@ export class UserService {
 
   readonly user = this.userSignal.asReadonly();
   readonly isLoggedIn = computed(() => !this.user().isGuest);
-
-  constructor(private readonly router: Router) {
-  }
+  private readonly router = inject(Router);
 
   setLoggedInUser(userResponse: UserResponse): void {
     const user: User = {

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { RouterLink } from "@angular/router";
 import { MatIconModule } from "@angular/material/icon";
 import { MatToolbarModule } from "@angular/material/toolbar";
@@ -17,11 +17,7 @@ import { AuthButtonComponent } from "../auth-button/auth-button.component";
 })
 export class HeaderComponent {
   @Input() title: string = 'headerTitle';
-
-  constructor(
-    public readonly themeService: ThemeService
-  ) {
-  }
+  public readonly themeService = inject(ThemeService);
 
   get isDarkMode(): boolean {
     return this.themeService.isDarkMode();

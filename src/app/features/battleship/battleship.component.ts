@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { BattleShipCellStatus } from "./models/battleship.model";
 import { BattleshipService } from "./services/battleship.service";
 import { Subject } from 'rxjs';
@@ -25,11 +25,12 @@ export class BattleshipComponent implements OnInit, OnDestroy {
   // connection: any;
 
   myRoomCode: string;
+  private readonly battleshipService = inject(BattleshipService);
   connected$ = this.battleshipService.connected$;
   connectionError$ = this.battleshipService.connectionError$;
   private readonly destroy$ = new Subject<void>();
 
-  constructor(private readonly battleshipService: BattleshipService) {
+  constructor() {
     this.myBoard = this.createBoard(this.rows, this.cols);
     this.OpponentBoard = this.createBoard(this.rows, this.cols);
     this.shipLocations = this.placeShips(this.numShips, this.shipLength, this.myBoard);

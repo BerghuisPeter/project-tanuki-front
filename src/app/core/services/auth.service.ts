@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { UserService } from "./user.service";
 import {
   AuthControllerAuthService,
@@ -18,8 +18,10 @@ import { MatSnackBar } from "@angular/material/snack-bar";
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private readonly userService: UserService, private readonly authControllerAuthService: AuthControllerAuthService, private readonly router: Router, private readonly snackBar: MatSnackBar) {
-  }
+  private readonly userService = inject(UserService);
+  private readonly authControllerAuthService = inject(AuthControllerAuthService);
+  private readonly router = inject(Router);
+  private readonly snackBar = inject(MatSnackBar);
 
   register(email: string, password: string) {
     const registerRequest: RegisterRequest = { email, password };

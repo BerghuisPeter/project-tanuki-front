@@ -1,4 +1,4 @@
-import { Component, signal } from "@angular/core";
+import { Component, inject, signal } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { MatTooltipModule } from "@angular/material/tooltip";
@@ -17,13 +17,9 @@ import { APP_PATHS } from "../../../shared/models/app-paths.model";
 export class AuthButtonComponent {
 
   protected readonly isLoggingOut = signal<boolean>(false);
-
-  constructor(
-    public readonly userService: UserService,
-    private readonly authService: AuthService,
-    private readonly router: Router
-  ) {
-  }
+  public readonly userService = inject(UserService);
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
 
   logout(): void {
     this.isLoggingOut.set(true);

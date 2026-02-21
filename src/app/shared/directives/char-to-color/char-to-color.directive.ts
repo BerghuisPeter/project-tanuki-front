@@ -1,13 +1,12 @@
-import { AfterViewInit, Directive, ElementRef, Renderer2 } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, inject, Renderer2 } from '@angular/core';
 
 @Directive({
   selector: '[appCharToColor]',
   standalone: true,
 })
 export class CharToColorDirective implements AfterViewInit {
-
-  constructor(private readonly el: ElementRef, private readonly renderer: Renderer2) {
-  }
+  private readonly el = inject(ElementRef);
+  private readonly renderer = inject(Renderer2);
 
   ngAfterViewInit(): void {
     const characters = this.el.nativeElement.innerText;
