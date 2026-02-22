@@ -59,6 +59,16 @@
             {{ isLoginMode() ? "Don't have an account? Register" : "Already have an account? Login" }}
           </button>
         </div>
+
+        <div class="relative flex items-center py-4">
+          <div class="flex-grow border-t border-gray-300"></div>
+          <span class="mx-4 flex-shrink text-gray-400 text-sm">OR</span>
+          <div class="flex-grow border-t border-gray-300"></div>
+        </div>
+
+        <div class="flex justify-center">
+          <app-google-signin></app-google-signin>
+        </div>
       </form>
     </mat-card-content>
   </mat-card>

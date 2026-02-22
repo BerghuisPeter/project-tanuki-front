@@ -3,4 +3,5 @@ export const environment = {
   enableBattleShipFeature: '${ENABLE_BATTLESHIP}',
   authServiceUrl: '${AUTH_SERVICE_URL}',
   profileServiceUrl: '${PROFILE_SERVICE_URL}',
+  googleClientId: '${GOOGLE_CLIENT_ID}',
 };

@@ -18,6 +18,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from "../../core/services/auth.service";
 import { Router } from "@angular/router";
 import { APP_PATHS } from "../../shared/models/app-paths.model";
+import { GoogleSigningComponent } from "../../shared/components/google-signin/google-signing.component";
 
 @Component({
   selector: 'app-login',
@@ -30,7 +31,8 @@ import { APP_PATHS } from "../../shared/models/app-paths.model";
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    GoogleSigningComponent
   ],
   styleUrls: ['./authentication.component.scss'],
   templateUrl: './authentication.component.html',
