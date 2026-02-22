@@ -55,6 +55,7 @@ export class GoogleSigningComponent implements OnInit {
       client_id: environment.googleClientId,
       scope: 'openid email profile',
       ux_mode: 'popup',
+      select_account: true,
       callback: (response: google.accounts.oauth2.CodeResponse) => {
         this.ngZone.run(() => {
           this.handleCredentialResponse(response);
