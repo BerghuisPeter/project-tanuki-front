@@ -11,9 +11,14 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const token = authService.getAccessToken();
 
-  // If we have a token and it's not a refresh request, add the Authorization header
+  // If we have a token and it's not a login/register/refresh request, add the Authorization header
   let authReq = req;
-  if (token && !req.url.includes('/api/v1/auth/refresh')) {
+  const isAuthRequest = req.url.includes('/api/v1/auth/login') ||
+    req.url.includes('/api/v1/auth/register') ||
+    req.url.includes('/api/v1/auth/refresh') ||
+    req.url.includes('/api/v1/auth/google');
+
+  if (token && !isAuthRequest) {
     authReq = req.clone({
       setHeaders: {
         Authorization: `Bearer ${token}`

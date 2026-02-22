@@ -58,7 +58,7 @@ jobs:
       run_socket: ${{ needs.changes.outputs.socket == 'true' }}
   prod:
     name: deploy to prod
-    needs: [ changes, dev ]
+    needs: [ changes ]
     if: ${{ github.ref == 'refs/heads/master' && (needs.changes.outputs.angular == 'true' || needs.changes.outputs.socket == 'true') }}
     uses: ./.github/workflows/_deployment.yml
     secrets: inherit

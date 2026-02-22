@@ -3,6 +3,7 @@ import { UserService } from "./user.service";
 import {
   AuthControllerAuthService,
   AuthResponse,
+  GoogleLoginRequest,
   LoginRequest,
   RefreshRequest,
   RegisterRequest,
@@ -22,6 +23,14 @@ export class AuthService {
   private readonly authControllerAuthService = inject(AuthControllerAuthService);
   private readonly router = inject(Router);
   private readonly snackBar = inject(MatSnackBar);
+
+  loginWithGoogle(code: string) {
+    const googleLoginRequest: GoogleLoginRequest = { code };
+    return this.authControllerAuthService.googleLogin(googleLoginRequest)
+      .pipe(
+        tap(authRes => this.handleAuthResponse(authRes))
+      );
+  }
 
   register(email: string, password: string) {
     const registerRequest: RegisterRequest = { email, password };

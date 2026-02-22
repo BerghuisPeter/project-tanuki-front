@@ -1,0 +1,24 @@
+@if (isMenuItem()) {
+  <button
+    (click)="themeService.toggleTheme()"
+    [attr.aria-label]="ThemeTooltip"
+    [matTooltip]="ThemeTooltip"
+    mat-menu-item
+  >
+    <mat-icon>
+      {{ isDarkMode ? 'light_mode' : 'dark_mode' }}
+    </mat-icon>
+    Theme
+  </button>
+} @else {
+  <button
+    (click)="themeService.toggleTheme()"
+    [attr.aria-label]="ThemeTooltip"
+    [matTooltip]="ThemeTooltip"
+    mat-icon-button
+  >
+    <mat-icon>
+      {{ isDarkMode ? 'light_mode' : 'dark_mode' }}
+    </mat-icon>
+  </button>
+}
