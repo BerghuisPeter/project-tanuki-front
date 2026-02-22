@@ -6,16 +6,18 @@
 
   <span class="spacer flex-grow"></span>
 
-  <app-auth-button></app-auth-button>
+  <div class="md:hidden">
+    <button [matMenuTriggerFor]="menu" class="md:hidden" matIconButton>
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <app-auth-button [isMenuItem]="true"></app-auth-button>
+      <app-theme-toggle [isMenuItem]="true"></app-theme-toggle>
+    </mat-menu>
+  </div>
 
-  <button
-    (click)="themeService.toggleTheme()"
-    [matTooltip]="ThemeTooltip"
-    aria-label="Toggle theme"
-    mat-icon-button
-  >
-    <mat-icon>
-      {{ isDarkMode ? 'light_mode' : 'dark_mode' }}
-    </mat-icon>
-  </button>
+  <div class="hidden md:flex items-center px-4">
+    <app-auth-button></app-auth-button>
+    <app-theme-toggle></app-theme-toggle>
+  </div>
 </mat-toolbar>

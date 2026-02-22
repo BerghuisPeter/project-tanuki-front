@@ -5,15 +5,16 @@ import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatButtonModule } from "@angular/material/button";
 import { TitleCasePipe } from "@angular/common";
 import { ThemeService } from "../../services/theme.service";
-import { MatTooltip } from "@angular/material/tooltip";
+import { ThemeToggleComponent } from "../theme-toggle/theme-toggle.component";
 import { AuthButtonComponent } from "../auth-button/auth-button.component";
+import { MatMenu, MatMenuTrigger } from "@angular/material/menu";
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
   standalone: true,
-  imports: [MatIconModule, MatToolbarModule, MatButtonModule, TitleCasePipe, MatTooltip, AuthButtonComponent, RouterLink],
+  imports: [MatIconModule, MatToolbarModule, MatButtonModule, TitleCasePipe, AuthButtonComponent, ThemeToggleComponent, RouterLink, MatMenu, MatMenuTrigger],
 })
 export class HeaderComponent {
   @Input() title: string = 'headerTitle';
