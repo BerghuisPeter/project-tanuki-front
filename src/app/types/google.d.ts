@@ -1,9 +1,3 @@
-declare global {
-  interface Window {
-    google: any;
-  }
-
-  const google: any;
-}
+/// <reference types="google.accounts" />
 
 export {};

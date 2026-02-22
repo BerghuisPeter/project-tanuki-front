@@ -25,6 +25,7 @@ export default [
       globals: {
         ...globals.browser,
         ...globals.jasmine,
+        google: 'readonly',
       },
       parserOptions: {
         project: ['./tsconfig.json'],

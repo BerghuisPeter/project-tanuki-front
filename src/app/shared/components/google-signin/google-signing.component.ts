@@ -36,7 +36,7 @@ export class GoogleSigningComponent implements OnInit {
   private readonly googleScriptService = inject(GoogleScriptService);
   private readonly snackBar = inject(MatSnackBar);
   private readonly router = inject(Router);
-  private client: any;
+  private client: google.accounts.oauth2.CodeClient | undefined;
 
   ngOnInit(): void {
     from(this.googleScriptService.load()).subscribe(() => {
@@ -55,12 +55,12 @@ export class GoogleSigningComponent implements OnInit {
       client_id: environment.googleClientId,
       scope: 'openid email profile',
       ux_mode: 'popup',
-      callback: (response: any) => {
+      callback: (response: google.accounts.oauth2.CodeResponse) => {
         this.ngZone.run(() => {
           this.handleCredentialResponse(response);
         });
       },
-      error_callback: (error: any) => {
+      error_callback: (error: google.accounts.oauth2.ClientConfigError) => {
         this.ngZone.run(() => {
           this.handleGoogleError(error);
         });
@@ -68,16 +68,16 @@ export class GoogleSigningComponent implements OnInit {
     });
   }
 
-  private handleGoogleError(error: any): void {
+  private handleGoogleError(error: google.accounts.oauth2.ClientConfigError): void {
     console.error('Google Auth error:', error);
     let message = 'An error occurred during Google Sign-In.';
 
     if (error.type === 'popup_closed') {
       message = 'Sign-in popup was closed before completing.';
-    } else if (error.type === 'access_denied') {
-      message = 'Access to your Google account was denied.';
-    } else if (error.type === 'invalid_grant' || error.type === 'unauthorized_client') {
-      message = 'There is a configuration issue with the Google Sign-In. Please check your origin/client ID.';
+    } else if (error.type === 'popup_failed_to_open') {
+      message = 'The Google Sign-In popup failed to open. Please check your browser settings.';
+    } else if (error.type === 'unknown') {
+      message = 'A configuration issue with the Google Sign-In occurred. Please check your origin/client ID.';
     }
 
     this.snackBar.open(message, 'Close', {
@@ -86,7 +86,7 @@ export class GoogleSigningComponent implements OnInit {
     });
   }
 
-  private handleCredentialResponse(response: any): void {
+  private handleCredentialResponse(response: google.accounts.oauth2.CodeResponse): void {
     if (!response.code) return;
 
     this.authService.loginWithGoogle(response.code).subscribe({
