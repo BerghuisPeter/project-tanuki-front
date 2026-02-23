@@ -1,8 +1,6 @@
-import { Component, inject, NgZone, OnInit, signal } from '@angular/core';
-import { from } from 'rxjs';
+import { Component, inject, signal } from '@angular/core';
 import { environment } from "../../../../environments/environment";
 import { AuthService } from "../../../core/services/auth.service";
-import { GoogleScriptService } from "../../../core/services/google-script.service";
 import { MatSnackBar, MatSnackBarModule } from "@angular/material/snack-bar";
 import { MatIconButton } from "@angular/material/button";
 import { Router } from "@angular/router";
@@ -30,83 +28,83 @@ import { APP_PATHS } from "../../models/app-paths.model";
     </button>
   `,
 })
-export class GoogleSigningComponent implements OnInit {
-  private readonly ngZone = inject(NgZone);
+export class GoogleSigningComponent {
   private readonly authService = inject(AuthService);
-  private readonly googleScriptService = inject(GoogleScriptService);
   private readonly snackBar = inject(MatSnackBar);
   private readonly router = inject(Router);
-  private client: google.accounts.oauth2.CodeClient | undefined;
-  protected readonly isDisabled = signal(true);
-
-  ngOnInit(): void {
-    from(this.googleScriptService.load()).subscribe({
-      next: () => {
-        this.initializeGoogle();
-        this.isDisabled.set(false);
-      },
-      error: (err) => {
-        console.error('Failed to load Google script', err);
-        this.snackBar.open('Failed to load Google Sign-In script. Please contact support.', '', {
-          duration: 5000,
-          panelClass: ['bg-red-500', 'text-white']
-        });
-      }
-    });
-  }
+  protected readonly isDisabled = signal(false);
 
   onGoogleLoginClick() {
-    if (this.client) {
-      this.isDisabled.set(true);
-      this.client.requestCode();
-    }
+    this.isDisabled.set(true);
+    this.loginWithGoogle();
   }
 
-  private initializeGoogle(): void {
-    this.client = google.accounts.oauth2.initCodeClient({
-      client_id: environment.googleClientId,
-      scope: 'openid email',
-      ux_mode: 'popup',
-      select_account: true,
-      callback: (response: google.accounts.oauth2.CodeResponse) => {
-        this.ngZone.run(() => {
-          this.handleCredentialResponse(response);
-        });
-      },
-      error_callback: (error: google.accounts.oauth2.ClientConfigError) => {
-        this.ngZone.run(() => {
-          this.handleGoogleError(error);
-        });
-      }
-    });
-  }
+  private loginWithGoogle() {
+    const width = 500;
+    const height = 600;
+    const left = window.screen.width / 2 - width / 2;
+    const top = window.screen.height / 2 - height / 2;
 
-  private handleGoogleError(error: google.accounts.oauth2.ClientConfigError): void {
-    this.isDisabled.set(false);
-    console.error('Google Auth error:', error);
-    let message = 'An error occurred during Google Sign-In.';
+    // Point to the backend initiation endpoint
+    const url = `${environment.authServiceUrl}/oauth2/authorization/google`;
 
-    if (error.type === 'popup_closed') {
-      message = 'Sign-in popup was closed before completing.';
-    } else if (error.type === 'popup_failed_to_open') {
-      message = 'The Google Sign-In popup failed to open. Please check your browser settings.';
-    } else if (error.type === 'unknown') {
-      message = 'A configuration issue with the Google Sign-In occurred. Please check your origin/client ID.';
-    }
+    const popup = window.open(
+      url,
+      'google-login',
+      `width=${width},height=${height},top=${top},left=${left}`
+    );
 
-    this.snackBar.open(message, 'Close', {
-      duration: 5000,
-      panelClass: ['bg-red-500', 'text-white']
-    });
-  }
-
-  private handleCredentialResponse(response: google.accounts.oauth2.CodeResponse): void {
-    if (!response.code) {
+    if (!popup) {
       this.isDisabled.set(false);
+      this.snackBar.open('The Google Sign-In popup failed to open. Please check your browser settings.', 'Close', {
+        duration: 5000,
+        panelClass: ['bg-red-500', 'text-white']
+      });
       return;
     }
 
-    this.authService.loginWithGoogle(response.code).subscribe({
+    // Listen for the message from the popup
+    const messageListener = (event: MessageEvent) => {
+      console.log('Message received from origin:', event.origin);
+      console.log('Current origin:', window.location.origin);
+      console.log('Message data:', event.data);
+
+      // Ensure the message comes from your own frontend origin
+      if (event.origin !== window.location.origin) {
+        console.warn('Origin mismatch, ignoring message');
+        return;
+      }
+
+      if (event.data.type === 'GOOGLE_LOGIN_SUCCESS') {
+        const code = event.data.code;
+        console.log('Successfully received code from popup:', code);
+        window.removeEventListener('message', messageListener);
+        this.handleCredentialResponse(code);
+      }
+    };
+
+    window.addEventListener('message', messageListener);
+
+    // Check if popup is closed manually through user interaction
+    // and remove Listener to prevent multiple listeners
+    const pollTimer = window.setInterval(() => {
+      try {
+        if (popup.closed) {
+          window.clearInterval(pollTimer);
+          this.isDisabled.set(false);
+          window.removeEventListener('message', messageListener);
+        }
+      } catch (e) {
+        // If we can't access popup.closed due to COOP, we might be stuck.
+        // However, we should at least not crash the timer.
+        // In some cases, COOP will just make popup.closed throw or return undefined.
+        console.error('Error checking popup closure:', e);
+      }
+    }, 500);
+  }
+
+  private handleCredentialResponse(code: string): void {
+    this.authService.loginWithGoogle(code).subscribe({
       next: () => this.router.navigate([APP_PATHS.HOME], { replaceUrl: true }),
       error: (err) => {
         this.isDisabled.set(false);

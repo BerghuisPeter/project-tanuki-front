@@ -3,5 +3,6 @@ export enum APP_PATHS {
   AUTHENTICATION = 'authentication',
   BOAT = 'boat',
   CHAT = 'chat',
-  GOCHUIN = 'gochuin'
+  GOCHUIN = 'gochuin',
+  GOOGLE_LOGIN_SUCCESS = 'google-login-success'
 }

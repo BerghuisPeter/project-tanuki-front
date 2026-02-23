@@ -3,7 +3,7 @@ import { UserService } from "./user.service";
 import {
   AuthControllerAuthService,
   AuthResponse,
-  GoogleLoginRequest,
+  ExchangeGoogleCodeRequest,
   LoginRequest,
   RefreshRequest,
   RegisterRequest,
@@ -25,8 +25,8 @@ export class AuthService {
   private readonly snackBar = inject(MatSnackBar);
 
   loginWithGoogle(code: string) {
-    const googleLoginRequest: GoogleLoginRequest = { code };
-    return this.authControllerAuthService.googleLogin(googleLoginRequest)
+    const exchangeRequest: ExchangeGoogleCodeRequest = { code };
+    return this.authControllerAuthService.exchangeGoogleCode(exchangeRequest)
       .pipe(
         tap(authRes => this.handleAuthResponse(authRes))
       );

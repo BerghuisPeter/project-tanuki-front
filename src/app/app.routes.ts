@@ -23,6 +23,10 @@ export const routes: Routes = [
     loadComponent: () => import('./features/authentication/authentication.component').then(m => m.AuthenticationComponent)
   },
   {
+    path: APP_PATHS.GOOGLE_LOGIN_SUCCESS,
+    loadComponent: () => import('./features/google-callback/google-callback.component').then(m => m.GoogleCallbackComponent)
+  },
+  {
     path: '**',
     component: PageNotFoundComponent
   }
