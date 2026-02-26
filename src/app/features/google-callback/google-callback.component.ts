@@ -7,7 +7,7 @@ import { ActivatedRoute } from '@angular/router';
   template: '<p>Logging in...</p>'
 })
 export class GoogleCallbackComponent implements OnInit {
-  constructor(private route: ActivatedRoute) {
+  constructor(private readonly route: ActivatedRoute) {
   }
 
   ngOnInit() {
