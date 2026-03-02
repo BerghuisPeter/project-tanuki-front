@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Authenticating...</title>
+  <style>body {
+    font-family: sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+  }
+
+  .loader {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 2s linear infinite;
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }</style>
+</head>
+<body>
+<div class="loader"></div>
+<script>const urlParams = new URLSearchParams(window.location.search);
+const code = urlParams.get("code");
+if (window.opener && code) {
+  window.opener.postMessage({ type: "OAUTH2_CODE", code }, window.location.origin);
+} else {
+  console.error("No code found or opener window missing");
+}</script>
+</body>
+</html>

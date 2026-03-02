@@ -1,9 +1,11 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnDestroy, signal } from '@angular/core';
 import { environment } from "../../../../environments/environment";
 import { AuthService } from "../../../core/services/auth.service";
 import { MatSnackBar, MatSnackBarModule } from "@angular/material/snack-bar";
 import { MatIconButton } from "@angular/material/button";
 import { Router } from "@angular/router";
+import { APP_PATHS } from "../../../shared/models/app-paths.model";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: 'app-google-signin',
@@ -27,15 +29,84 @@ import { Router } from "@angular/router";
     </button>
   `,
 })
-export class GoogleSigningComponent {
+export class GoogleSigningComponent implements OnDestroy {
   private readonly authService = inject(AuthService);
   private readonly snackBar = inject(MatSnackBar);
   private readonly router = inject(Router);
   protected readonly isDisabled = signal(false);
+  private authSubscription?: Subscription;
+  private messageListener?: (event: MessageEvent) => void;
 
   onGoogleLoginClick() {
     this.isDisabled.set(true);
-    // Point to the backend initiation endpoint
-    window.location.href = `${environment.authServiceUrl}/oauth2/authorization/google`;
+
+    const width = 500;
+    const height = 600;
+    const left = window.screen.width / 2 - width / 2;
+    const top = window.screen.height / 2 - height / 2;
+
+    const url = `${environment.authServiceUrl}/oauth2/authorization/google`;
+    const popup = window.open(
+      url,
+      'google-login',
+      `width=${width},height=${height},top=${top},left=${left}`
+    );
+
+    if (!popup) {
+      this.isDisabled.set(false);
+      this.snackBar.open('The Google Sign-In popup failed to open. Please check your browser settings.', 'Close', {
+        duration: 5000,
+        panelClass: ['bg-red-500', 'text-white']
+      });
+      return;
+    }
+
+    this.messageListener = (event: MessageEvent) => {
+      if (event.origin !== window.location.origin) return;
+
+      if (event.data.type === 'OAUTH2_CODE') {
+        const code = event.data.code;
+        popup.close();
+        this.handleCodeExchange(code);
+        this.cleanupListener();
+      }
+    };
+
+    window.addEventListener('message', this.messageListener);
+
+    const pollTimer = window.setInterval(() => {
+      if (popup.closed) {
+        window.clearInterval(pollTimer);
+        this.isDisabled.set(false);
+        this.cleanupListener();
+      }
+    }, 500);
+  }
+
+  ngOnDestroy() {
+    this.cleanupListener();
+    this.authSubscription?.unsubscribe();
+  }
+
+  private handleCodeExchange(code: string) {
+    this.authSubscription = this.authService.exchangeOAuth2Code(code).subscribe({
+      next: () => {
+        this.router.navigate([APP_PATHS.HOME], { replaceUrl: true });
+      },
+      error: (err) => {
+        console.error('Exchange code failed', err);
+        this.isDisabled.set(false);
+        this.snackBar.open('Authentication failed. Please try again.', 'Close', {
+          duration: 5000
+        });
+      }
+    });
+  }
+
+  private cleanupListener() {
+    if (this.messageListener) {
+      window.removeEventListener('message', this.messageListener);
+      this.messageListener = undefined;
+    }
   }
 }
