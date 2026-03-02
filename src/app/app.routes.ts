@@ -23,8 +23,8 @@ export const routes: Routes = [
     loadComponent: () => import('./features/authentication/authentication.component').then(m => m.AuthenticationComponent)
   },
   {
-    path: APP_PATHS.GOOGLE_LOGIN_SUCCESS,
-    loadComponent: () => import('./features/google-callback/google-callback.component').then(m => m.GoogleCallbackComponent)
+    path: APP_PATHS.OAUTH2_SUCCESS,
+    loadComponent: () => import('./features/oauth2-success/oauth2-success.component').then(m => m.OAuth2SuccessComponent)
   },
   {
     path: '**',

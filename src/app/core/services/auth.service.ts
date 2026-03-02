@@ -3,7 +3,7 @@ import { UserService } from "./user.service";
 import {
   AuthControllerAuthService,
   AuthResponse,
-  ExchangeGoogleCodeRequest,
+  ExchangeOAuth2CodeRequest,
   LoginRequest,
   RefreshRequest,
   RegisterRequest,
@@ -24,9 +24,9 @@ export class AuthService {
   private readonly router = inject(Router);
   private readonly snackBar = inject(MatSnackBar);
 
-  loginWithGoogle(code: string) {
-    const exchangeRequest: ExchangeGoogleCodeRequest = { code };
-    return this.authControllerAuthService.exchangeGoogleCode(exchangeRequest)
+  exchangeOAuth2Code(code: string) {
+    const exchangeRequest: ExchangeOAuth2CodeRequest = { code };
+    return this.authControllerAuthService.exchangeOAuth2Code(exchangeRequest)
       .pipe(
         tap(authRes => this.handleAuthResponse(authRes))
       );
@@ -109,7 +109,7 @@ export class AuthService {
     }
   }
 
-  private handleAuthResponse(authRes: AuthResponse) {
+  handleAuthResponse(authRes: AuthResponse) {
     localStorage.setItem('access_token', authRes.accessToken);
     localStorage.setItem('refresh_token', authRes.refreshToken);
     this.userService.setLoggedInUser(authRes.user);
