@@ -32,10 +32,10 @@
 </head>
 <body>
 <div class="loader"></div>
-<script>const urlParams = new URLSearchParams(window.location.search);
+<script>const urlParams = new URLSearchParams(globalThis.location.search);
 const code = urlParams.get("code");
-if (window.opener && code) {
-  window.opener.postMessage({ type: "OAUTH2_CODE", code }, window.location.origin);
+if (globalThis.opener && code) {
+  globalThis.opener.postMessage({ type: "OAUTH2_CODE", code }, globalThis.location.origin);
 } else {
   console.error("No code found or opener window missing");
 }</script>

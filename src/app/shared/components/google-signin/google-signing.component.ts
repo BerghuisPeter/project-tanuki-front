@@ -42,11 +42,11 @@ export class GoogleSigningComponent implements OnDestroy {
 
     const width = 500;
     const height = 600;
-    const left = window.screen.width / 2 - width / 2;
-    const top = window.screen.height / 2 - height / 2;
+    const left = globalThis.screen.width / 2 - width / 2;
+    const top = globalThis.screen.height / 2 - height / 2;
 
     const url = `${environment.authServiceUrl}/oauth2/authorization/google`;
-    const popup = window.open(
+    const popup = globalThis.open(
       url,
       'google-login',
       `width=${width},height=${height},top=${top},left=${left}`
@@ -62,7 +62,7 @@ export class GoogleSigningComponent implements OnDestroy {
     }
 
     this.messageListener = (event: MessageEvent) => {
-      if (event.origin !== window.location.origin) return;
+      if (event.origin !== globalThis.location.origin) return;
 
       if (event.data.type === 'OAUTH2_CODE') {
         const code = event.data.code;
@@ -72,11 +72,11 @@ export class GoogleSigningComponent implements OnDestroy {
       }
     };
 
-    window.addEventListener('message', this.messageListener);
+    globalThis.addEventListener('message', this.messageListener);
 
-    const pollTimer = window.setInterval(() => {
+    const pollTimer = globalThis.setInterval(() => {
       if (popup.closed) {
-        window.clearInterval(pollTimer);
+        globalThis.clearInterval(pollTimer);
         this.isDisabled.set(false);
         this.cleanupListener();
       }
@@ -105,7 +105,7 @@ export class GoogleSigningComponent implements OnDestroy {
 
   private cleanupListener() {
     if (this.messageListener) {
-      window.removeEventListener('message', this.messageListener);
+      globalThis.removeEventListener('message', this.messageListener);
       this.messageListener = undefined;
     }
   }

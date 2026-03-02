@@ -23,7 +23,7 @@ export class ThemeService {
     if (savedTheme) {
       return savedTheme === 'dark';
     }
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    return globalThis.matchMedia('(prefers-color-scheme: dark)').matches;
   }
 
   private saveTheme(isDark: boolean): void {
