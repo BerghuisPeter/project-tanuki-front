@@ -1,19 +1,18 @@
-import { Component, inject, NgZone, OnInit } from '@angular/core';
-import { from } from 'rxjs';
+import { Component, inject, OnDestroy, signal } from '@angular/core';
 import { environment } from "../../../../environments/environment";
 import { AuthService } from "../../../core/services/auth.service";
-import { GoogleScriptService } from "../../../core/services/google-script.service";
 import { MatSnackBar, MatSnackBarModule } from "@angular/material/snack-bar";
 import { MatIconButton } from "@angular/material/button";
 import { Router } from "@angular/router";
-import { APP_PATHS } from "../../models/app-paths.model";
+import { APP_PATHS } from "../../../shared/models/app-paths.model";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: 'app-google-signin',
   standalone: true,
   imports: [MatSnackBarModule, MatIconButton],
   template: `
-    <button (click)="onGoogleLoginClick()" type="button" matIconButton>
+    <button (click)="onGoogleLoginClick()" [disabled]="isDisabled()" type="button" matIconButton>
       <svg height="18" viewBox="0 0 48 48" width="18" xmlns="http://www.w3.org/2000/svg">
         <path
           d="M44.5 20H24v8.5h11.8C34.7 33.9 30.1 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 4.1 29.6 2 24 2 11.8 2 2 11.8 2 24s9.8 22 22 22c11 0 21-8 21-22 0-1.3-.2-2.7-.5-4z"
@@ -30,75 +29,84 @@ import { APP_PATHS } from "../../models/app-paths.model";
     </button>
   `,
 })
-export class GoogleSigningComponent implements OnInit {
-  private readonly ngZone = inject(NgZone);
+export class GoogleSigningComponent implements OnDestroy {
   private readonly authService = inject(AuthService);
-  private readonly googleScriptService = inject(GoogleScriptService);
   private readonly snackBar = inject(MatSnackBar);
   private readonly router = inject(Router);
-  private client: google.accounts.oauth2.CodeClient | undefined;
-
-  ngOnInit(): void {
-    from(this.googleScriptService.load()).subscribe(() => {
-      this.initializeGoogle();
-    });
-  }
+  protected readonly isDisabled = signal(false);
+  private authSubscription?: Subscription;
+  private messageListener?: (event: MessageEvent) => void;
 
   onGoogleLoginClick() {
-    if (this.client) {
-      this.client.requestCode();
+    this.isDisabled.set(true);
+
+    const width = 500;
+    const height = 600;
+    const left = globalThis.screen.width / 2 - width / 2;
+    const top = globalThis.screen.height / 2 - height / 2;
+
+    const url = `${environment.authServiceUrl}/oauth2/authorization/google`;
+    const popup = globalThis.open(
+      url,
+      'google-login',
+      `width=${width},height=${height},top=${top},left=${left}`
+    );
+
+    if (!popup) {
+      this.isDisabled.set(false);
+      this.snackBar.open('The Google Sign-In popup failed to open. Please check your browser settings.', 'Close', {
+        duration: 5000,
+        panelClass: ['bg-red-500', 'text-white']
+      });
+      return;
     }
+
+    this.messageListener = (event: MessageEvent) => {
+      if (event.origin !== globalThis.location.origin) return;
+
+      if (event.data.type === 'OAUTH2_CODE') {
+        const code = event.data.code;
+        popup.close();
+        this.handleCodeExchange(code);
+        this.cleanupListener();
+      }
+    };
+
+    globalThis.addEventListener('message', this.messageListener);
+
+    const pollTimer = globalThis.setInterval(() => {
+      if (popup.closed) {
+        globalThis.clearInterval(pollTimer);
+        this.isDisabled.set(false);
+        this.cleanupListener();
+      }
+    }, 500);
   }
 
-  private initializeGoogle(): void {
-    this.client = google.accounts.oauth2.initCodeClient({
-      client_id: environment.googleClientId,
-      scope: 'openid email profile',
-      ux_mode: 'popup',
-      select_account: true,
-      callback: (response: google.accounts.oauth2.CodeResponse) => {
-        this.ngZone.run(() => {
-          this.handleCredentialResponse(response);
-        });
+  ngOnDestroy() {
+    this.cleanupListener();
+    this.authSubscription?.unsubscribe();
+  }
+
+  private handleCodeExchange(code: string) {
+    this.authSubscription = this.authService.exchangeOAuth2Code(code).subscribe({
+      next: () => {
+        this.router.navigate([APP_PATHS.HOME], { replaceUrl: true });
       },
-      error_callback: (error: google.accounts.oauth2.ClientConfigError) => {
-        this.ngZone.run(() => {
-          this.handleGoogleError(error);
+      error: (err) => {
+        console.error('Exchange code failed', err);
+        this.isDisabled.set(false);
+        this.snackBar.open('Authentication failed. Please try again.', 'Close', {
+          duration: 5000
         });
       }
     });
   }
 
-  private handleGoogleError(error: google.accounts.oauth2.ClientConfigError): void {
-    console.error('Google Auth error:', error);
-    let message = 'An error occurred during Google Sign-In.';
-
-    if (error.type === 'popup_closed') {
-      message = 'Sign-in popup was closed before completing.';
-    } else if (error.type === 'popup_failed_to_open') {
-      message = 'The Google Sign-In popup failed to open. Please check your browser settings.';
-    } else if (error.type === 'unknown') {
-      message = 'A configuration issue with the Google Sign-In occurred. Please check your origin/client ID.';
+  private cleanupListener() {
+    if (this.messageListener) {
+      globalThis.removeEventListener('message', this.messageListener);
+      this.messageListener = undefined;
     }
-
-    this.snackBar.open(message, 'Close', {
-      duration: 5000,
-      panelClass: ['bg-red-500', 'text-white']
-    });
-  }
-
-  private handleCredentialResponse(response: google.accounts.oauth2.CodeResponse): void {
-    if (!response.code) return;
-
-    this.authService.loginWithGoogle(response.code).subscribe({
-      next: () => this.router.navigate([APP_PATHS.HOME], { replaceUrl: true }),
-      error: (err) => {
-        console.error('Google login failed', err);
-        this.snackBar.open('Google login failed. Please try again later.', 'Close', {
-          duration: 5000,
-          panelClass: ['bg-red-500', 'text-white']
-        });
-      },
-    });
   }
 }

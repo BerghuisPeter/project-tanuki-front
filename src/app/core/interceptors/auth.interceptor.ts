@@ -16,7 +16,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const isAuthRequest = req.url.includes('/api/v1/auth/login') ||
     req.url.includes('/api/v1/auth/register') ||
     req.url.includes('/api/v1/auth/refresh') ||
-    req.url.includes('/api/v1/auth/google');
+    req.url.includes('/api/v1/auth/google') ||
+    req.url.includes('/api/v1/auth/oauth2');
 
   if (token && !isAuthRequest) {
     authReq = req.clone({
