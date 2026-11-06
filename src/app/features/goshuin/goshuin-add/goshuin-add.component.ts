@@ -102,8 +102,8 @@ export class GoshuinAddComponent {
       validators: [Validators.required, Validators.min(1)],
       nonNullable: true,
     }),
-    label: ['testLabel'],
-    description: ['testDescription']
+    label: ['colored animal goshuin'],
+    description: ['beautiful hand written goshuin of a cat.']
   });
   private readonly router = inject(Router);
   private readonly templeFormGroupChanges$ = merge(
