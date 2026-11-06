@@ -31,6 +31,9 @@
   "private": true,
   "overrides": {
     "lightningcss": "1.32.0",
+    "get-uri": {
+      "basic-ftp": "^6.2.6"
+    },
     "sonarqube-scanner": {
       "adm-zip": "^0.6.1",
       "axios": "^1.21.0",
