@@ -30,7 +30,12 @@
   },
   "private": true,
   "overrides": {
-    "lightningcss": "1.32.0"
+    "lightningcss": "1.32.0",
+    "sonarqube-scanner": {
+      "adm-zip": "^0.6.1",
+      "axios": "^1.21.0",
+      "node-forge": "^1.4.3"
+    }
   },
   "optionalDependencies": {
     "lightningcss-linux-x64-gnu": "1.32.0"
