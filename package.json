@@ -56,7 +56,7 @@
     "@angular/router": "^21.2.26",
     "@tailwindcss/postcss": "^4.1.18",
     "@types/uuid": "^9.0.1",
-    "maplibre-gl": "^5.24.0",
+    "maplibre-gl": "^6.16.0",
     "rxjs": "~7.8.1",
     "socket.io-client": "^4.8.4",
     "tslib": "^2.5.3",

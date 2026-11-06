@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, inject, OnDestroy } from '@angular/core';
-import { LngLatBounds, LngLatLike, Map, NavigationControl } from 'maplibre-gl';
+import { getVersion, LngLatBounds, LngLatLike, Map, NavigationControl, setWorkerUrl } from 'maplibre-gl';
 import { AppConfigService } from 'src/app/core/services/app-config.service';
 
 @Component({
@@ -28,6 +28,10 @@ export class GoshuinMapComponent implements AfterViewInit, OnDestroy {
     ];
 
     const tokyo: LngLatLike = [139.6917, 35.6895]; // Tokyo [lng, lat]
+
+    // maplibre-gl v6 is ESM-only; with a bundler the worker must be served as a separate file.
+    // angular.json copies maplibre-gl-worker.mjs to the app root; `v` busts the cache on upgrades.
+    setWorkerUrl(new URL(`maplibre-gl-worker.mjs?v=${getVersion()}`, document.baseURI).toString());
 
     this.map = new Map({
       container: 'map',
